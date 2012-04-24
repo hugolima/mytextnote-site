@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>MyTextNote</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="/public/css/bootstrap-responsive.min.css" rel="stylesheet">
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li><a href="#about">&nbsp;</a></li>
+              <li><a href="#about">&nbsp;</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+          <a class="brand" href="#">MyTextNote</a>
+        </div>
+      </div>
+      <div align="center">
+        <div id="generalErrorMsg" class="alert alert-error hide" style="width: 360px; text-align: center;">
+          <span></span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container" style="padding-top: 100px;">
+      <div class="row">
+        <div class="span4 offset7">
+          <div class="hero-unit" style="padding-top: 40px; padding-bottom: 40px;">
+            <p>Sign in</p>
+            <label>Username</label>
+            <input id="login" type="text" class="span3">
+            <label>Password</label>
+            <input id="password" type="password" class="span3">
+            <span id="msgLoginFailed" class="hide" style="color: #B94A48;"></span>
+            <p style="padding-top: 10px">
+              <button id="btnSignin" data-loading-text="signing in..." class="btn btn-primary">Sign in</button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div> <!-- /container -->
+    
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/public/js/jquery.js"></script>
+    <script src="/public/js/bootstrap.min.js"></script>
+    <script src="/public/js/mytextnote.js"></script>
+    <script src="/public/js/login.js"></script>
+  </body>
+</html>

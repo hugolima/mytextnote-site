@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>MyTextNote</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+    <link href="/public/css/bootstrap-responsive.min.css" rel="stylesheet">
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">MyTextNote</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a data-toggle="modal" href="#modalCreateUser">Create File</a></li>
+              <li><a href="/user/logout">Log out</a></li>
+            </ul>
+            <p class="navbar-text pull-right">Logged in as <a href="#">Hugo Lima</a></p>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+      <div align="center">
+        <div id="generalErrorMsg" class="alert alert-error hide" style="width: 360px; text-align: center;">
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul id="fileList" class="nav nav-list">
+              <li class="nav-header">List of Files</li>
+              
+              <!--
+              <li class="fileitem" id='id'><a href="#">Erros Hibernate</a></li>
+              <li class="active, fileitem" id='id2'><a href="#">Comandos Linux</a></li>
+              <li class="fileitem" id='id3'><a href="#">Diversos - TI</a></li>
+              <li class="fileitem" id='id4'><a href="#">Problemas de TI</a></li>
+              <li class="fileitem" id='id5'><a href="#">Contas bancarias</a></li>
+              -->
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+          <div id="panelFileContent" class="hero-unit hide" style="padding-top: 20px; padding-bottom: 20px;">
+            <h3 id="labelFileName" style="padding-bottom: 10px;">File Name</h3>
+            <div class="input">
+              <textarea id="fileContent" class="xxlarge" style="width: 100%; height: 300px; padding-right: 0px; padding-left: 0px;"></textarea>
+              <span class="help-block">Edit the file content</span>
+            </div>
+            <p style="text-align: right;">
+              <button id="btnSave" data-loading-text="saving..." class="btn btn-primary">Save</button>
+            </p>
+            <input type="hidden" id="fileLink" />
+          </div>
+          <div id="panelNoFileContent" class="hero-unit" style="padding-top: 20px; padding-bottom: 20px;">
+            <h3 class="center" style="width: 100%; text-align: center; padding-bottom: 20px; padding-top: 20px;">Select or Create a File</h3>
+          </div>
+        </div><!--/span-->
+      </div><!--/row-->
+      
+      <hr>
+      
+      <footer>
+        <p style="text-align: center;">&copy; mytextnote.com 2011</p>
+        <p style="text-align: center;">email: hlglima at gmail dot com</p>
+      </footer>
+    
+    </div><!--/.fluid-container-->
+    
+    <div class="modal hide fade" id="modalCreateUser">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Create New File</h3>
+      </div>
+      <div class="modal-body">
+          <div id="inputNameGroup" class="control-group">
+            <label>Name *</label>
+            <input id="fileName" type="text" class="span3">
+            <span id="msgFileName" class="help-inline hide">ops..! name is required.</span>
+          </div>
+          <label>Description</label>
+          <input id="fileDesc" type="text" class="span3">
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <button id="btnSaveNewFile" data-loading-text="saving..." class="btn btn-primary">Save</button>
+      </div>
+    </div>
+    
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/public/js/jquery.js"></script>
+    <script src="/public/js/bootstrap.min.js"></script>
+    <script src="/public/js/mytextnote.js"></script>
+    <script src="/public/js/main.js"></script>
+  </body>
+</html>
