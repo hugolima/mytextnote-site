@@ -13,7 +13,8 @@ var server = connect()
     .use(connect.session({
         store: new RedisStore({
             port: config.redis.port,
-            host: config.redis.host
+            host: config.redis.host,
+            pass: config.redis.pass
         }),
         secret: config.web.sessSecret,
         cookie: { maxAge: config.web.sessMaxAge }
