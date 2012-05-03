@@ -13,10 +13,10 @@ jQuery( function($) {
         btn.button('loading');
         
         MYTEXTNOTE.sendPOST('/user/login', {login: $('#login').val(), password: $('#password').val()}, function(data) {
-            btn.button('reset');
             if (data.success) {
                 window.location.replace(data.object.nextPage);
             } else {
+                btn.button('reset');
                 $('#msgLoginFailed').html(data.message);
                 $('#msgLoginFailed').removeClass('hide');
             }

@@ -27,7 +27,7 @@ var getFileContent = function(event, fileSelected) {
 var getFiles = function (fileSelected) {
     MYTEXTNOTE.sendGET('/files', function(data) {
         var items = [];
-        items.push('<li class="nav-header">List of Files</li>');
+        items.push('<li class="nav-header">List of Notes</li>');
         
         $.each(data.object, function(i, item) {
             items.push('<li id="' + item.link + '"><a href="#">' + item.name + '</a></li>');
@@ -72,12 +72,12 @@ jQuery( function($) {
         
         MYTEXTNOTE.sendPOST('/files/add', {name: $('#fileName').val(), desc: $('#fileDesc').val()}, function(data) {
             btnSave.button('reset');
-            $('#modalCreateUser').modal('hide');
+            $('#modalCreateNote').modal('hide');
             getFiles(data.object);
         });
     });
     
-    $('#modalCreateUser').on('hidden', function () {
+    $('#modalCreateNote').on('hidden', function () {
         $('#fileName').val('');
         $('#fileDesc').val('');
         $('#msgFileName').addClass('hide');
