@@ -1,12 +1,11 @@
 var connect = require('connect'),
     http = require('http'),
     resource = require('resource-router'),
-    mongoose = require('mongoose'),
     RedisStore = require('connect-redis')(connect),
-    config = require('./lib/config');
+    config = require('./lib/config'),
+    staticDir = __dirname + '/static';
 
-var staticDir = __dirname + '/static';
-mongoose.connect(config.mongo.url);
+require('./lib/init')();
 
 var server = connect()
     .use(connect.cookieParser())

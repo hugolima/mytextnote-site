@@ -61,7 +61,7 @@ jQuery( function($) {
     });
     
     $('#btnSaveNewFile').click( function() {
-        if (!$('#noteName').val()) {
+        if (!$('#noteName').val() || $.trim($('#noteName').val()) === '') {
             $('#inputNameGroup').addClass('error');
             $('#msgFileName').removeClass('hide');
             return;
