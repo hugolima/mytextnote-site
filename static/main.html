@@ -58,7 +58,7 @@
       <div class="row-fluid">
         <div class="span3">
           <div class="well sidebar-nav">
-            <ul id="fileList" class="nav nav-list">
+            <ul id="notesList" class="nav nav-list">
               <li class="nav-header">List of Notes</li>
               
               <!--
@@ -72,18 +72,18 @@
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span9">
-          <div id="panelFileContent" class="hero-unit hide" style="padding-top: 20px; padding-bottom: 20px;">
+          <div id="panelNoteContent" class="hero-unit hide" style="padding-top: 20px; padding-bottom: 20px;">
             <h3 id="labelFileName" style="padding-bottom: 10px;">Note Name</h3>
             <div class="input">
-              <textarea id="fileContent" class="xxlarge" style="width: 100%; height: 300px; padding-right: 0px; padding-left: 0px;"></textarea>
+              <textarea id="noteContent" class="xxlarge" style="width: 100%; height: 300px; padding-right: 0px; padding-left: 0px;"></textarea>
               <span class="help-block">Edit the note content</span>
             </div>
             <p style="text-align: right;">
-              <button id="btnSave" data-loading-text="saving..." class="btn btn-primary">Save</button>
+              <button id="btnUpdate" data-loading-text="saving..." class="btn btn-primary">Update</button>
             </p>
             <input type="hidden" id="fileLink" />
           </div>
-          <div id="panelNoFileContent" class="hero-unit" style="padding-top: 20px; padding-bottom: 20px;">
+          <div id="panelNoNoteContent" class="hero-unit" style="padding-top: 20px; padding-bottom: 20px;">
             <h3 class="center" style="width: 100%; text-align: center; padding-bottom: 20px; padding-top: 20px;">Select or Create a Note</h3>
           </div>
         </div><!--/span-->
@@ -106,11 +106,11 @@
       <div class="modal-body">
           <div id="inputNameGroup" class="control-group">
             <label>Name *</label>
-            <input id="fileName" type="text" class="span3">
+            <input id="noteName" type="text" class="span3">
             <span id="msgFileName" class="help-inline hide">ops..! name is required.</span>
           </div>
           <label>Description</label>
-          <input id="fileDesc" type="text" class="span3">
+          <input id="noteDesc" type="text" class="span3">
       </div>
       <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal">Close</a>

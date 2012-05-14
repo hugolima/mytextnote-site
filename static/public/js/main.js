@@ -1,31 +1,31 @@
-var getFileContent = function(event, fileSelected) {
+var getNoteContent = function(event, noteSelected) {
     if ($(this).hasClass('nav-header')) {
         return;
     }
     
-    $('#panelFileContent').removeClass('hide');
-    $('#panelNoFileContent').addClass('hide');
-    $('#fileList').find('.active').removeClass('active');
+    $('#panelNoteContent').removeClass('hide');
+    $('#panelNoNoteContent').addClass('hide');
+    $('#notesList').find('.active').removeClass('active');
     
-    if (!fileSelected) {
+    if (!noteSelected) {
         var that = this;
         
         MYTEXTNOTE.sendGET(this.id, function(data) {
           $('#labelFileName').html(data.object.name);
-          $('#fileContent').val(data.object.content);
+          $('#noteContent').val(data.object.content);
           $('#fileLink').val(that.id);
           $(that).addClass('active');
         });
     } else {
-        $('li[id="' + fileSelected.link + '"]').addClass('active');
-        $('#fileLink').val(fileSelected.link);
-        $('#labelFileName').html(fileSelected.name);
-        $('#fileContent').val('');
+        $('li[id="' + noteSelected.link + '"]').addClass('active');
+        $('#fileLink').val(noteSelected.link);
+        $('#labelFileName').html(noteSelected.name);
+        $('#noteContent').val('');
     }
 };
 
-var getFiles = function (fileSelected) {
-    MYTEXTNOTE.sendGET('/files', function(data) {
+var getFiles = function (noteSelected) {
+    MYTEXTNOTE.sendGET('/notes', function(data) {
         var items = [];
         items.push('<li class="nav-header">List of Notes</li>');
         
@@ -33,15 +33,15 @@ var getFiles = function (fileSelected) {
             items.push('<li id="' + item.link + '"><a href="#">' + item.name + '</a></li>');
         });
         
-        $('#fileList').empty();
-        $('#fileList').append( items.join('') );
+        $('#notesList').empty();
+        $('#notesList').append( items.join('') );
         
-        MYTEXTNOTE.iterateLi('fileList', function (i, item) {
-            $(item).on('click', getFileContent);
+        MYTEXTNOTE.iterateLi('notesList', function (i, item) {
+            $(item).on('click', getNoteContent);
         });
         
-        if (fileSelected) {
-            getFileContent('', fileSelected);
+        if (noteSelected) {
+            getNoteContent('', noteSelected);
         }
     });
 };
@@ -51,17 +51,17 @@ jQuery( function($) {
         getFiles();
     });
     
-    $('#btnSave').click( function() {
-        var btnSave = $(this);
-        btnSave.button('loading');
+    $('#btnUpdate').click( function() {
+        var btnUpdate = $(this);
+        btnUpdate.button('loading');
         
-        MYTEXTNOTE.sendPOST($('#fileLink').val(), {content: $('#fileContent').val()}, function(data) {
-          btnSave.button('reset');
+        MYTEXTNOTE.sendPOST($('#fileLink').val(), {content: $('#noteContent').val()}, function(data) {
+          btnUpdate.button('reset');
         });
     });
     
     $('#btnSaveNewFile').click( function() {
-        if (!$('#fileName').val()) {
+        if (!$('#noteName').val()) {
             $('#inputNameGroup').addClass('error');
             $('#msgFileName').removeClass('hide');
             return;
@@ -70,7 +70,7 @@ jQuery( function($) {
         var btnSave = $(this);
         btnSave.button('loading');
         
-        MYTEXTNOTE.sendPOST('/files/add', {name: $('#fileName').val(), desc: $('#fileDesc').val()}, function(data) {
+        MYTEXTNOTE.sendPOST('/notes/add', {name: $('#noteName').val(), desc: $('#noteDesc').val()}, function(data) {
             btnSave.button('reset');
             $('#modalCreateNote').modal('hide');
             getFiles(data.object);
@@ -78,8 +78,8 @@ jQuery( function($) {
     });
     
     $('#modalCreateNote').on('hidden', function () {
-        $('#fileName').val('');
-        $('#fileDesc').val('');
+        $('#noteName').val('');
+        $('#noteDesc').val('');
         $('#msgFileName').addClass('hide');
         $('#inputNameGroup').removeClass('error');
     });

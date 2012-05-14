@@ -23,5 +23,5 @@ var server = connect()
     .use(require('./lib/middleware').sessionSecurity)
     .use(connect.static(staticDir))
     .use('/user', resource(require('./lib/controllers/user')))
-    .use('/files', resource(require('./lib/controllers/file')))
+    .use('/notes', resource(require('./lib/controllers/note')))
     .listen(config.web.port);
