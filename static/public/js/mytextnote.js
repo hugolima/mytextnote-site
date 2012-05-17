@@ -1,4 +1,20 @@
-var MYTEXTNOTE = function() {
+var MYTEXTNOTE = (function() {
+    var timeoutMsgErro;
+    
+    var showMsg = function (msg) {
+        if ($('#generalErrorMsg').length) {
+            $('#generalErrorMsg').find('span').html(msg);
+            $('#generalErrorMsg').removeClass('hide');
+            
+            clearTimeout(timeoutMsgErro);
+            timeoutMsgErro = setTimeout(function () {
+                $('#generalErrorMsg').addClass('hide');
+            }, 10000);
+        } else {
+            alert(msg);
+        }
+    };
+    
     var sendAjax = function (info, fnSuccess) {
         var request = $.ajax({
             type: info.type,
@@ -8,22 +24,18 @@ var MYTEXTNOTE = function() {
         });
         request.done(function (data) {
             if (!data.notAuthenticated) {
-                fnSuccess(data);
+                if (data.success) {
+                    fnSuccess(data);
+                } else {
+                    showMsg(data.message);
+                }
             } else {
                 window.location.replace(data.loginPage);
             }
         });
         request.fail(function (jqXHR, textStatus) {
             $('.btn').button('reset');
-            if ($('#generalErrorMsg').length) {
-                $('#generalErrorMsg').find('span').html('<strong>Oops!</strong> Something goes wrong on your request, try again later');
-                $('#generalErrorMsg').removeClass('hide');
-                setTimeout(function () {
-                    $('#generalErrorMsg').addClass('hide');
-                }, 9000);
-            } else {
-                alert('Oops! Something goes wrong on your request, try again later.');
-            }
+            showMsg('<strong>Oops!</strong> Something goes wrong on your request, try again later');
         });
     };
     
@@ -53,4 +65,4 @@ var MYTEXTNOTE = function() {
         clickOnEnter: clickOnEnter,
         iterateLi: iterateLi
     }
-}();
+}());

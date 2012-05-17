@@ -1,5 +1,5 @@
 var getNoteContent = function(event, noteSelected) {
-    if ($(this).hasClass('nav-header')) {
+    if ($(this).hasClass('active')) {
         return;
     }
     
@@ -9,7 +9,6 @@ var getNoteContent = function(event, noteSelected) {
     
     if (!noteSelected) {
         var that = this;
-        
         MYTEXTNOTE.sendGET(this.id, function(data) {
           $('#labelFileName').html(data.object.name);
           $('#noteContent').val(data.object.content);
@@ -27,7 +26,6 @@ var getNoteContent = function(event, noteSelected) {
 var getFiles = function (noteSelected) {
     MYTEXTNOTE.sendGET('/notes', function(data) {
         var items = [];
-        items.push('<li class="nav-header">List of Notes</li>');
         
         $.each(data.object, function(i, item) {
             items.push('<li id="' + item.link + '"><a href="#">' + item.name + '</a></li>');
