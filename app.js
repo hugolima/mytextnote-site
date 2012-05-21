@@ -13,6 +13,7 @@ var MyTextNote = (function () {
         var server = connect()
             .use(require('./lib/middleware').uncaughtErrorHandler)
             .use(connect.favicon())
+            .use(connect.logger({ buffer: true }))
             .use(connect.cookieParser())
             .use(connect.session({
                 store: new RedisStore({
@@ -23,8 +24,8 @@ var MyTextNote = (function () {
                 secret: config.web.sessSecret,
                 cookie: { maxAge: config.web.sessMaxAge }
             }))
-            .use(connect.logger({ buffer: true }))
             .use(require('./lib/middleware').sessionSecurity)
+            .use('/session', resource(require('./lib/controllers/session')))
             .use('/user', resource(require('./lib/controllers/user')))
             .use('/notes', resource(require('./lib/controllers/note')))
             .use(connect.static(staticDir))

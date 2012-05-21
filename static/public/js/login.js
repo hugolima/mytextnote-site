@@ -12,14 +12,15 @@ jQuery( function($) {
         var btn = $(this);
         btn.button('loading');
         
-        MYTEXTNOTE.sendPOST('/user/login', {login: $('#login').val(), password: $('#password').val()}, function(data) {
-            if (data.success) {
+        MYTEXTNOTE.sendPOST('/user/login', {login: $('#login').val(), password: $('#password').val()},
+            function(data) {
                 window.location.replace(data.object.nextPage);
-            } else {
+            },
+            function(msg) {
                 btn.button('reset');
-                $('#msgLoginFailed').html(data.message);
+                $('#msgLoginFailed').html(msg);
                 $('#msgLoginFailed').removeClass('hide');
             }
-        });
+        );
     });
 });

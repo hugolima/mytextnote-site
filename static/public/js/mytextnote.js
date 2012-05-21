@@ -15,7 +15,7 @@ var MYTEXTNOTE = (function() {
         }
     };
     
-    var sendAjax = function (info, fnSuccess) {
+    var sendAjax = function (info, fnSuccess, fnNoSuccess) {
         var request = $.ajax({
             type: info.type,
             url: info.url,
@@ -23,10 +23,17 @@ var MYTEXTNOTE = (function() {
             dataType: 'json'
         });
         request.done(function (data) {
+            if (!data) {
+                return;
+            }
             if (!data.notAuthenticated) {
                 if (data.success) {
                     fnSuccess(data);
                 } else {
+                    if (fnNoSuccess && typeof fnNoSuccess === 'function') {
+                        fnNoSuccess(data.message);
+                        return;
+                    }
                     showMsg(data.message);
                 }
             } else {
@@ -43,9 +50,19 @@ var MYTEXTNOTE = (function() {
         sendAjax({type: 'GET', url: url}, fnSuccess);
     };
     
-    var sendPOST = function (url, params, fnSuccess) {
-        sendAjax({type: 'POST', url: url, params: params}, fnSuccess);
+    var sendPOST = function (url, params, fnSuccess, fnNoSuccess) {
+        sendAjax({type: 'POST', url: url, params: params}, fnSuccess, fnNoSuccess);
     };
+    
+    var initCheckSession = function () {
+        var checkSession = function () {
+            sendGET('/session/check', function (data) {
+                setTimeout(checkSession, 145000);
+            });
+        };
+        
+        setTimeout(checkSession, 145000);
+    }
     
     var clickOnEnter = function (idBtn) {
         return function (e) {
@@ -60,9 +77,10 @@ var MYTEXTNOTE = (function() {
     };
     
     return {
-        sendGET: sendGET,
-        sendPOST: sendPOST,
-        clickOnEnter: clickOnEnter,
-        iterateLi: iterateLi
+        'sendGET': sendGET,
+        'sendPOST': sendPOST,
+        'initCheckSession': initCheckSession,
+        'clickOnEnter': clickOnEnter,
+        'iterateLi': iterateLi
     }
 }());

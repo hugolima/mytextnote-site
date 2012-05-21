@@ -43,7 +43,7 @@
               <li class="active"><a data-toggle="modal" href="#modalCreateNote">Create Note</a></li>
               <li><a href="/user/logout">Log out</a></li>
             </ul>
-            <p class="navbar-text pull-right">Logged in as <a href="#">Hugo Lima</a></p>
+            <p class="navbar-text pull-right"><a id="userName"  href="#">User name</a></p>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -91,8 +91,7 @@
       <hr>
       
       <footer>
-        <p style="text-align: center;">&copy; mytextnote.com 2011</p>
-        <p style="text-align: center;">email: hlglima at gmail dot com</p>
+        <p style="text-align: center;">&copy; mytextnote.com 2011  |  email: hlglima at gmail.com</p>
       </footer>
     
     </div><!--/.fluid-container-->
@@ -105,7 +104,7 @@
       <div class="modal-body">
           <div id="inputNameGroup" class="control-group">
             <label>Name *</label>
-            <input id="noteName" type="text" class="span3">
+            <input id="noteName" type="text" class="span3" maxlength="40">
             <span id="msgFileName" class="help-inline hide">ops..! name is required.</span>
           </div>
           <label>Description</label>

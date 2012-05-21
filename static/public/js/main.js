@@ -44,9 +44,17 @@ var getFiles = function (noteSelected) {
     });
 };
 
+var getUserName = function () {
+    MYTEXTNOTE.sendGET('/user/name', function(data) {
+        $('#userName').html( data.object );
+    });
+};
+
 jQuery( function($) {
     $(document).ready( function () {
         getFiles();
+        getUserName();
+        MYTEXTNOTE.initCheckSession();
     });
     
     $('#btnUpdate').click( function() {
