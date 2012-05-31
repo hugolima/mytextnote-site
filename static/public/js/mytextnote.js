@@ -54,6 +54,10 @@ var MYTEXTNOTE = (function() {
         sendAjax({type: 'POST', url: url, params: params}, fnSuccess, fnNoSuccess);
     };
     
+    var sendDELETE = function (url, fnSuccess) {
+        sendAjax({type: 'DELETE', url: url}, fnSuccess);
+    };
+    
     var initCheckSession = function () {
         var checkSession = function () {
             sendGET('/session/check', function (data) {
@@ -79,6 +83,7 @@ var MYTEXTNOTE = (function() {
     return {
         'sendGET': sendGET,
         'sendPOST': sendPOST,
+        'sendDELETE': sendDELETE,
         'initCheckSession': initCheckSession,
         'clickOnEnter': clickOnEnter,
         'iterateLi': iterateLi

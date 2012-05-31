@@ -40,7 +40,9 @@
           <a class="brand" href="#">MyTextNote</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a data-toggle="modal" href="#modalCreateNote">Create Note</a></li>
+              <li class="active"><a data-toggle="modal" href="#modalCreateNote">Create</a></li>
+              <li class="disabled"><a data-toggle="modal" href="#modalRenameNote">Rename</a></li>
+              <li id="liLnkDelete" class="disabled"><a id="lnkDelete" data-toggle="modal" href="#modalDeleteNote">Delete</a></li>
               <li><a href="/user/logout">Log out</a></li>
             </ul>
             <p class="navbar-text pull-right"><a id="userName"  href="#">User name</a></p>
@@ -72,7 +74,7 @@
         </div><!--/span-->
         <div class="span9">
           <div id="panelNoteContent" class="hero-unit hide" style="padding: 10px 20px;">
-            <h3 id="labelFileName" style="padding-bottom: 10px;">Note Name</h3>
+            <h3 id="labelFileName" style="padding-bottom: 10px;"></h3>
             <div class="input">
               <textarea id="noteContent" class="xxlarge" style="width: 100%; height: 300px; padding-right: 0px; padding-left: 0px;"></textarea>
               <span class="help-block">Edit the note content</span>
@@ -96,9 +98,9 @@
     
     </div><!--/.fluid-container-->
     
+    <!-- Modal for create note -->
     <div class="modal hide fade" id="modalCreateNote">
       <div class="modal-header">
-        <a class="close" data-dismiss="modal">×</a>
         <h3>Create New Note</h3>
       </div>
       <div class="modal-body">
@@ -107,12 +109,25 @@
             <input id="noteName" type="text" class="span3" maxlength="40">
             <span id="msgFileName" class="help-inline hide">ops..! name is required.</span>
           </div>
-          <label>Description</label>
-          <input id="noteDesc" type="text" class="span3">
       </div>
       <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
         <button id="btnSaveNewFile" data-loading-text="saving..." class="btn btn-primary">Save</button>
+      </div>
+    </div>
+    
+    <!-- Modal for delete note -->
+    <div class="modal hide fade" id="modalDeleteNote">
+      <div class="modal-header">
+        <h3>Confirm Delete</h3>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this note?<br>
+        <span id="noteNameDelete"></span>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+        <button id="btnDelete" data-loading-text="deleting..." class="btn btn-danger">Delete</button>
       </div>
     </div>
     

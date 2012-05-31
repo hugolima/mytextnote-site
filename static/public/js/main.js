@@ -10,20 +10,24 @@ var getNoteContent = function(event, noteSelected) {
     if (!noteSelected) {
         var that = this;
         MYTEXTNOTE.sendGET(this.id, function(data) {
-          $('#labelFileName').html(data.object.name);
-          $('#noteContent').val(data.object.content);
-          $('#fileLink').val(that.id);
-          $(that).addClass('active');
+            $('#labelFileName').html(data.object.name);
+            $('#noteContent').val(data.object.content);
+            $('#fileLink').val(that.id);
+            $(that).addClass('active');
+            $('#liLnkDelete').removeClass('disabled active');
+            $('#liLnkDelete').addClass('active');
         });
     } else {
         $('li[id="' + noteSelected.link + '"]').addClass('active');
         $('#fileLink').val(noteSelected.link);
         $('#labelFileName').html(noteSelected.name);
         $('#noteContent').val('');
+        $('#liLnkDelete').removeClass('disabled active');
+        $('#liLnkDelete').addClass('active');
     }
 };
 
-var getFiles = function (noteSelected) {
+var getNotes = function (noteSelected) {
     MYTEXTNOTE.sendGET('/notes', function(data) {
         var items = [];
         
@@ -52,9 +56,10 @@ var getUserName = function () {
 
 jQuery( function($) {
     $(document).ready( function () {
-        getFiles();
+        getNotes();
         getUserName();
         MYTEXTNOTE.initCheckSession();
+        $('#fileLink').val('');
     });
     
     $('#btnUpdate').click( function() {
@@ -62,7 +67,31 @@ jQuery( function($) {
         btnUpdate.button('loading');
         
         MYTEXTNOTE.sendPOST($('#fileLink').val(), {content: $('#noteContent').val()}, function(data) {
-          btnUpdate.button('reset');
+            btnUpdate.button('reset');
+        });
+    });
+    
+    $('#lnkDelete').click( function() {
+        if (!$('#fileLink').val()) {
+            return false;
+        }
+        return true;
+    });
+    
+    $('#btnDelete').click( function() {
+        var btnDelete = $(this);
+        btnDelete.button('loading');
+        
+        MYTEXTNOTE.sendDELETE($('#fileLink').val(), function(data) {
+            btnDelete.button('reset');
+            getNotes();
+            
+            $('#panelNoteContent').addClass('hide');
+            $('#panelNoNoteContent').removeClass('hide');
+            $('#fileLink').val('');
+            $('#modalDeleteNote').modal('hide');
+            $('#liLnkDelete').removeClass('disabled active');
+            $('#liLnkDelete').addClass('disabled');
         });
     });
     
@@ -76,10 +105,10 @@ jQuery( function($) {
         var btnSave = $(this);
         btnSave.button('loading');
         
-        MYTEXTNOTE.sendPOST('/notes/add', {name: $('#noteName').val(), desc: $('#noteDesc').val()}, function(data) {
+        MYTEXTNOTE.sendPOST('/notes/add', {name: $('#noteName').val()}, function(data) {
             btnSave.button('reset');
             $('#modalCreateNote').modal('hide');
-            getFiles(data.object);
+            getNotes(data.object);
         });
     });
     
@@ -88,5 +117,9 @@ jQuery( function($) {
         $('#noteDesc').val('');
         $('#msgFileName').addClass('hide');
         $('#inputNameGroup').removeClass('error');
+    });
+    
+    $('#modalDeleteNote').on('show', function () {
+        $('#noteNameDelete').html('"' + $('#labelFileName').html() + '"');
     });
 });
