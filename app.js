@@ -11,7 +11,6 @@ var MyTextNote = (function () {
         require('./lib/init')();
         
         var server = connect()
-            .use(require('./lib/middleware').uncaughtErrorHandler)
             .use(connect.favicon())
             .use(connect.logger({ buffer: true }))
             .use(connect.cookieParser())

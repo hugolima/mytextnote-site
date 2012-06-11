@@ -9,10 +9,15 @@ var MYTEXTNOTE = (function() {
             clearTimeout(timeoutMsgErro);
             timeoutMsgErro = setTimeout(function () {
                 $('#generalErrorMsg').addClass('hide');
-            }, 10000);
+            }, 20000);
         } else {
             alert(msg);
         }
+    };
+    
+    var restoreToDefaults = function () {
+        $('.btn').button('reset');
+        $('.modal').modal('hide');
     };
     
     var sendAjax = function (info, fnSuccess, fnNoSuccess) {
@@ -20,7 +25,8 @@ var MYTEXTNOTE = (function() {
             type: info.type,
             url: info.url,
             data: info.params || {},
-            dataType: 'json'
+            dataType: 'json',
+            timeout: 40000
         });
         request.done(function (data) {
             if (!data) {
@@ -34,6 +40,7 @@ var MYTEXTNOTE = (function() {
                         fnNoSuccess(data.message);
                         return;
                     }
+                    restoreToDefaults();
                     showMsg(data.message);
                 }
             } else {
@@ -41,7 +48,7 @@ var MYTEXTNOTE = (function() {
             }
         });
         request.fail(function (jqXHR, textStatus) {
-            $('.btn').button('reset');
+            restoreToDefaults();
             showMsg('<strong>Oops!</strong> Something goes wrong on your request, try again later');
         });
     };

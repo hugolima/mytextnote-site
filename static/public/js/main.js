@@ -1,4 +1,21 @@
+var checkLinkOperations = function () {
+    $('#liLnkDelete').removeClass('disabled active');
+    $('#liLnkRename').removeClass('disabled active');
+    
+    if ($('#noteLink').val() !== '') {
+        $('#liLnkDelete').addClass('active');
+        $('#liLnkRename').addClass('active');
+        return;
+    }
+    
+    $('#liLnkDelete').addClass('disabled');
+    $('#liLnkRename').addClass('disabled');
+};
+
 var getNoteContent = function(event, noteSelected) {
+    if (event) {
+        event.preventDefault();
+    }
     if ($(this).hasClass('active')) {
         return;
     }
@@ -12,18 +29,16 @@ var getNoteContent = function(event, noteSelected) {
         MYTEXTNOTE.sendGET(this.id, function(data) {
             $('#labelFileName').html(data.object.name);
             $('#noteContent').val(data.object.content);
-            $('#fileLink').val(that.id);
+            $('#noteLink').val(that.id);
             $(that).addClass('active');
-            $('#liLnkDelete').removeClass('disabled active');
-            $('#liLnkDelete').addClass('active');
+            checkLinkOperations();
         });
     } else {
         $('li[id="' + noteSelected.link + '"]').addClass('active');
-        $('#fileLink').val(noteSelected.link);
+        $('#noteLink').val(noteSelected.link);
         $('#labelFileName').html(noteSelected.name);
         $('#noteContent').val('');
-        $('#liLnkDelete').removeClass('disabled active');
-        $('#liLnkDelete').addClass('active');
+        checkLinkOperations();
     }
 };
 
@@ -59,46 +74,29 @@ jQuery( function($) {
         getNotes();
         getUserName();
         MYTEXTNOTE.initCheckSession();
-        $('#fileLink').val('');
+        $('#noteLink').val('');
     });
     
     $('#btnUpdate').click( function() {
         var btnUpdate = $(this);
         btnUpdate.button('loading');
         
-        MYTEXTNOTE.sendPOST($('#fileLink').val(), {content: $('#noteContent').val()}, function(data) {
+        MYTEXTNOTE.sendPOST($('#noteLink').val(), {content: $('#noteContent').val()}, function(data) {
             btnUpdate.button('reset');
         });
     });
     
-    $('#lnkDelete').click( function() {
-        if (!$('#fileLink').val()) {
+    $('.requireNote').click( function() {
+        if (!$('#noteLink').val()) {
             return false;
         }
         return true;
     });
     
-    $('#btnDelete').click( function() {
-        var btnDelete = $(this);
-        btnDelete.button('loading');
-        
-        MYTEXTNOTE.sendDELETE($('#fileLink').val(), function(data) {
-            btnDelete.button('reset');
-            getNotes();
-            
-            $('#panelNoteContent').addClass('hide');
-            $('#panelNoNoteContent').removeClass('hide');
-            $('#fileLink').val('');
-            $('#modalDeleteNote').modal('hide');
-            $('#liLnkDelete').removeClass('disabled active');
-            $('#liLnkDelete').addClass('disabled');
-        });
-    });
-    
-    $('#btnSaveNewFile').click( function() {
+    $('#btnCreateNote').click( function() {
         if (!$('#noteName').val() || $.trim($('#noteName').val()) === '') {
             $('#inputNameGroup').addClass('error');
-            $('#msgFileName').removeClass('hide');
+            $('#msgNoteName').removeClass('hide');
             return;
         }
         
@@ -112,11 +110,54 @@ jQuery( function($) {
         });
     });
     
+    $('#btnRenameNote').click( function() {
+        if (!$('#newNoteName').val() || $.trim($('#newNoteName').val()) === '') {
+            $('#inputNewNameGroup').addClass('error');
+            $('#msgNewNoteName').removeClass('hide');
+            return;
+        }
+        
+        var btnSave = $(this);
+        btnSave.button('loading');
+        
+        MYTEXTNOTE.sendPOST($('#noteLink').val(), {newName: $('#newNoteName').val()}, function(data) {
+            btnSave.button('reset');
+            $('#labelFileName').html($('#newNoteName').val());
+            $('li[id="' + $('#noteLink').val() + '"]').children('a').html($('#newNoteName').val());
+            $('#modalRenameNote').modal('hide');
+        });
+    });
+    
+    $('#btnDeleteNote').click( function() {
+        var btnDeleteNote = $(this);
+        btnDeleteNote.button('loading');
+        
+        MYTEXTNOTE.sendDELETE($('#noteLink').val(), function() {
+            btnDeleteNote.button('reset');
+            getNotes();
+            
+            $('#panelNoteContent').addClass('hide');
+            $('#panelNoNoteContent').removeClass('hide');
+            $('#noteLink').val('');
+            $('#modalDeleteNote').modal('hide');
+            checkLinkOperations();
+        });
+    });
+    
     $('#modalCreateNote').on('hidden', function () {
         $('#noteName').val('');
-        $('#noteDesc').val('');
-        $('#msgFileName').addClass('hide');
+        $('#msgNoteName').addClass('hide');
         $('#inputNameGroup').removeClass('error');
+    });
+    
+    $('#modalRenameNote').on('hidden', function () {
+        $('#newNoteName').val('');
+        $('#msgNewNoteName').addClass('hide');
+        $('#inputNewNameGroup').removeClass('error');
+    });
+
+    $('#modalRenameNote').on('show', function () {
+        $('#newNoteName').val($('#labelFileName').html());
     });
     
     $('#modalDeleteNote').on('show', function () {
