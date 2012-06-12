@@ -1,5 +1,5 @@
 [MyTextNote.com](http://mytextnote.com)
-=======================================
+---------------------------------------
 
 This is a project aimed to be kind of a lab on the Node.js web development.
 
