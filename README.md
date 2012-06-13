@@ -4,5 +4,5 @@
 This is a project aimed to be kind of a lab on the Node.js web development.
 
 It is quite simple, mainly used by myself.  
-It's especially for fun and knowledge!!!
+I made it especially for fun and training!!!
 
