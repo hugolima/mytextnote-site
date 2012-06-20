@@ -67,7 +67,7 @@ var MYTEXTNOTE = (function() {
     
     var initCheckSession = function () {
         var checkSession = function () {
-            sendGET('/session/check', function (data) {
+            sendGET('/session/check', function () {
                 setTimeout(checkSession, 145000);
             });
         };
