@@ -10,9 +10,10 @@ var MYTEXTNOTE = (function() {
             timeoutMsgErro = setTimeout(function () {
                 $('#generalErrorMsg').addClass('hide');
             }, 20000);
-        } else {
-            alert(msg);
-        }
+            
+            return;
+        } 
+        alert(msg);
     };
     
     var restoreToDefaults = function () {
@@ -34,18 +35,18 @@ var MYTEXTNOTE = (function() {
             }
             if (!data.notAuthenticated) {
                 if (data.success) {
-                    fnSuccess(data);
-                } else {
-                    if (fnNoSuccess && typeof fnNoSuccess === 'function') {
-                        fnNoSuccess(data.message);
-                        return;
-                    }
-                    restoreToDefaults();
-                    showMsg(data.message);
+                    fnSuccess && fnSuccess(data);
+                    return;
                 }
-            } else {
-                window.location.replace(data.loginPage);
+                if (fnNoSuccess) {
+                    fnNoSuccess(data.message);
+                    return;
+                }
+                restoreToDefaults();
+                showMsg(data.message);
+                return;
             }
+            window.location.replace(data.loginPage);
         });
         request.fail(function (jqXHR, textStatus) {
             restoreToDefaults();
