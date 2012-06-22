@@ -12,6 +12,16 @@ var checkLinkOperations = function () {
     $('#liLnkRename').addClass('disabled');
 };
 
+var updateNoteMarkers = function (liElementNote, noteName, noteContent) {
+    $('#panelNoteContent').removeClass('hide');
+    $('#panelNoNoteContent').addClass('hide');
+    $('#notesList').find('.active').removeClass('active');
+    liElementNote.addClass('active');
+    
+    $('#labelFileName').html(noteName);
+    $('#noteContent').val(noteContent);
+};
+
 var getNoteContent = function(event, noteSelected) {
     if (event) {
         event.preventDefault();
@@ -20,25 +30,18 @@ var getNoteContent = function(event, noteSelected) {
         return;
     }
     
-    $('#panelNoteContent').removeClass('hide');
-    $('#panelNoNoteContent').addClass('hide');
-    $('#notesList').find('.active').removeClass('active');
-    
     if (!noteSelected) {
         var that = this;
+        saveNoteNotSavedYet();
         MYTEXTNOTE.sendGET(this.id, function(data) {
-            $('#labelFileName').html(data.object.name);
-            $('#noteContent').val(data.object.content);
             window.noteLink = that.id;
-            $(that).addClass('active');
+            updateNoteMarkers($(that), data.object.name, data.object.content);
             checkLinkOperations();
             initSaveNote();
         });
     } else {
-        $('li[id="' + noteSelected.link + '"]').addClass('active');
         window.noteLink = noteSelected.link;
-        $('#labelFileName').html(noteSelected.name);
-        $('#noteContent').val('');
+        updateNoteMarkers($('li[id="' + noteSelected.link + '"]'), noteSelected.name, '');
         checkLinkOperations();
         initSaveNote();
     }
@@ -71,11 +74,15 @@ var getUserName = function () {
     });
 };
 
-var initSaveNote = function () {
-    if (window.timerSaveNote) {
-        clearTimeout(window.timerSaveNote);
+var saveNoteNotSavedYet = function () {
+    var contentToSend = $('#noteContent').val();
+    if (window.noteLink && window.oldNoteContent !== contentToSend) {
+        MYTEXTNOTE.sendPOST(window.noteLink, {content: contentToSend});
     }
-    
+};
+
+var initSaveNote = function () {
+    clearTimeout(window.timerSaveNote);
     window.oldNoteContent = $('#noteContent').val();
     
     var saveNote = function () {
@@ -92,9 +99,7 @@ var initSaveNote = function () {
 }
 
 var stopSaveNote = function () {
-    if (window.timerSaveNote) {
-        clearTimeout(window.timerSaveNote);
-    }
+    clearTimeout(window.timerSaveNote);
     delete window.timerSaveNote;
 }
 
@@ -176,12 +181,12 @@ jQuery( function($) {
         $('#msgNewNoteName').addClass('hide');
         $('#inputNewNameGroup').removeClass('error');
     });
-
+    
     $('#modalRenameNote').on('show', function () {
         $('#newNoteName').val($('#labelFileName').html());
     });
     
     $('#modalDeleteNote').on('show', function () {
-        $('#noteNameDelete').html('"' + $('#labelFileName').html() + '"');
+        $('#noteNameDelete').html('<b>' + $('#labelFileName').html() + '</b>');
     });
 });
