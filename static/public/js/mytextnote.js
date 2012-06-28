@@ -1,5 +1,6 @@
-var MYTEXTNOTE = (function() {
-    var timeoutMsgErro;
+var MYTEXTNOTE = (function () {
+    var timeoutMsgErro,
+        ncSocket;
     
     var showMsg = function (msg) {
         if ($('#generalErrorMsg').length) {
@@ -74,7 +75,7 @@ var MYTEXTNOTE = (function() {
         };
         
         setTimeout(checkSession, 145000);
-    }
+    };
     
     var clickOnEnter = function (idBtn) {
         return function (e) {
@@ -88,12 +89,26 @@ var MYTEXTNOTE = (function() {
         $('#' + idUl).find('li').each(fn);
     };
     
+    var updateNoteContent = function (id, content) {
+        if (!ncSocket) {
+            ncSocket = io.connect('/noteContentSocket');
+            ncSocket.on('connect', function () {
+                ncSocket.on('message', function (msg) {
+                    console.log('Msg from server: ' + msg);
+                });
+            });
+        }
+        
+        ncSocket.emit('updateNoteContent', {'id': id, 'content': content});
+    };
+    
     return {
         'sendGET': sendGET,
         'sendPOST': sendPOST,
         'sendDELETE': sendDELETE,
         'initCheckSession': initCheckSession,
         'clickOnEnter': clickOnEnter,
-        'iterateLi': iterateLi
-    }
+        'iterateLi': iterateLi,
+        'updateNoteContent': updateNoteContent
+    };
 }());

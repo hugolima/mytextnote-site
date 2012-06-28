@@ -20,6 +20,7 @@ var updateNoteMarkers = function (liElementNote, noteName, noteContent) {
     
     $('#labelFileName').html(noteName);
     $('#noteContent').val(noteContent);
+    window.justSelected = true;
 };
 
 var getNoteContent = function(event, noteSelected) {
@@ -32,18 +33,16 @@ var getNoteContent = function(event, noteSelected) {
     
     if (!noteSelected) {
         var that = this;
-        saveNoteNotSavedYet();
+        updateNoteNotSavedYet();
         MYTEXTNOTE.sendGET(this.id, function(data) {
             window.noteLink = that.id;
             updateNoteMarkers($(that), data.object.name, data.object.content);
             checkLinkOperations();
-            initSaveNote();
         });
     } else {
         window.noteLink = noteSelected.link;
         updateNoteMarkers($('li[id="' + noteSelected.link + '"]'), noteSelected.name, '');
         checkLinkOperations();
-        initSaveNote();
     }
 };
 
@@ -74,39 +73,37 @@ var getUserName = function () {
     });
 };
 
-var saveNoteNotSavedYet = function () {
+var updateNoteNotSavedYet = function () {
     var contentToSend = $('#noteContent').val();
     if (window.noteLink && window.oldNoteContent !== contentToSend) {
-        MYTEXTNOTE.sendPOST(window.noteLink, {content: contentToSend});
+        MYTEXTNOTE.updateNoteContent(window.noteLink, contentToSend);
     }
 };
 
-var initSaveNote = function () {
-    clearTimeout(window.timerSaveNote);
-    window.oldNoteContent = $('#noteContent').val();
+var checkUpdateNote = function () {
+    var contentToSend = $('#noteContent').val();
     
-    var saveNote = function () {
-        var contentToSend = $('#noteContent').val();
-        if (window.noteLink && window.oldNoteContent !== contentToSend) {
-            MYTEXTNOTE.sendPOST(window.noteLink, {content: contentToSend}, function() {
-                window.oldNoteContent = contentToSend;
-            });
-        }
-        window.timerSaveNote = setTimeout(saveNote, 2000);
-    };
+    if (window.justSelected) {
+        window.justSelected = false;
+        window.oldNoteContent = contentToSend;
+    }
     
-    saveNote();
-}
+    if (window.noteLink && window.oldNoteContent !== contentToSend) {
+        window.oldNoteContent = contentToSend;
+        MYTEXTNOTE.updateNoteContent(window.noteLink, contentToSend);
+    }
+    
+    setTimeout(checkUpdateNote, 2000);
+};
 
 var stopSaveNote = function () {
-    clearTimeout(window.timerSaveNote);
-    delete window.timerSaveNote;
 }
 
 jQuery( function($) {
     $(document).ready( function () {
         getNotes();
         getUserName();
+        checkUpdateNote();
         MYTEXTNOTE.initCheckSession();
         delete window.noteLink;
     });
