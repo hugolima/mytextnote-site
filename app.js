@@ -6,18 +6,19 @@ var connect = require('connect'),
 var MyTextNote = (function () {
     
     var init = function init() {
-            require('./lib/init')();
-            
-            var server = connect()
+        require('./lib/init')();
+        
+        var sessStore = new RedisStore({
+                port: config.redis.port,
+                host: config.redis.host,
+                pass: config.redis.pass
+            }),
+            server = connect()
                 .use(connect.favicon())
                 .use(connect.logger({ buffer: true }))
                 .use(connect.cookieParser())
                 .use(connect.session({
-                    store: new RedisStore({
-                        port: config.redis.port,
-                        host: config.redis.host,
-                        pass: config.redis.pass
-                    }),
+                    store: sessStore,
                     secret: config.web.sessSecret,
                     cookie: { maxAge: config.web.sessMaxAge }
                 }))
@@ -27,33 +28,13 @@ var MyTextNote = (function () {
                 .use('/notes', resource(require('./lib/controllers/note')))
                 .use(connect.static(__dirname + '/static'))
                 .listen(config.web.port);
-                
-            this.server = server;
-        },
-        startSocketio = function startSocketio() {
-            var io = require('socket.io').listen(this.server),
-                noteContentSocket;
-            
-            noteContentSocket = io
-                .of('/noteContentSocket')
-                .on('connection', function (socket) {
-                    socket.on('updateNoteContent', function (noteInfo) {
-                        console.log('Note ID: ' + noteInfo.id);
-                        console.log('Note Content: ' + noteInfo.content);
-                        //socket.send('Msg received here at server!!');
-                    });
-                    socket.on('disconnect', function () {
-                        console.log('Conections finalized.');
-                    });
-                });
-        };
         
+        require('./lib/controllers/websocket').init(server, sessStore);
+    };
+    
     return {
-        server: '',
-        'init': init,
-        'startSocketio': startSocketio
+        'init': init
     };
 }());
 
 MyTextNote.init();
-MyTextNote.startSocketio();

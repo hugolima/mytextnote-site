@@ -89,17 +89,17 @@ var MYTEXTNOTE = (function () {
         $('#' + idUl).find('li').each(fn);
     };
     
-    var updateNoteContent = function (id, content) {
+    var updateNoteContent = function (link, content) {
         if (!ncSocket) {
             ncSocket = io.connect('/noteContentSocket');
             ncSocket.on('connect', function () {
                 ncSocket.on('message', function (msg) {
-                    console.log('Msg from server: ' + msg);
+                    showMsg(msg);
                 });
             });
         }
         
-        ncSocket.emit('updateNoteContent', {'id': id, 'content': content});
+        ncSocket.emit('updateNoteContent', {'link': link, 'content': content});
     };
     
     return {

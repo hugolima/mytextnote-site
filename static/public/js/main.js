@@ -89,8 +89,8 @@ var checkUpdateNote = function () {
     }
     
     if (window.noteLink && window.oldNoteContent !== contentToSend) {
-        window.oldNoteContent = contentToSend;
         MYTEXTNOTE.updateNoteContent(window.noteLink, contentToSend);
+        window.oldNoteContent = contentToSend;
     }
     
     setTimeout(checkUpdateNote, 2000);
