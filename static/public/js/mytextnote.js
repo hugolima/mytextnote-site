@@ -91,7 +91,7 @@ var MYTEXTNOTE = (function () {
     
     var updateNoteContent = function (link, content) {
         if (!ncSocket) {
-            ncSocket = io.connect('/noteContentSocket');
+            ncSocket = io.connect('/noteContentSocket', {'force new connection': true});
             ncSocket.on('connect', function () {
                 ncSocket.on('message', function (msg) {
                     showMsg(msg);
@@ -102,6 +102,13 @@ var MYTEXTNOTE = (function () {
         ncSocket.emit('updateNoteContent', {'link': link, 'content': content});
     };
     
+    var stopNcSocket = function () {
+        if (ncSocket) {
+            ncSocket.socket.disconnect();
+            ncSocket = undefined;
+        }
+    };
+    
     return {
         'sendGET': sendGET,
         'sendPOST': sendPOST,
@@ -109,6 +116,7 @@ var MYTEXTNOTE = (function () {
         'initCheckSession': initCheckSession,
         'clickOnEnter': clickOnEnter,
         'iterateLi': iterateLi,
-        'updateNoteContent': updateNoteContent
+        'updateNoteContent': updateNoteContent,
+        'stopNcSocket': stopNcSocket
     };
 }());
