@@ -20,7 +20,7 @@ var updateNoteMarkers = function (liElementNote, noteName, noteContent) {
     
     $('#labelFileName').html(noteName);
     $('#noteContent').val(noteContent);
-    window.justSelected = true;
+    window.oldNoteContent = $('#noteContent').val();
 };
 
 var getNoteContent = function(event, noteSelected) {
@@ -30,6 +30,8 @@ var getNoteContent = function(event, noteSelected) {
     if ($(this).hasClass('active')) {
         return;
     }
+    
+    stopSaveContent();
     
     if (!noteSelected) {
         var that = this;
@@ -72,31 +74,42 @@ var getUserName = function () {
     });
 };
 
-var checkUpdateNote = function () {
-    if (!window.noteLink) {
-        MYTEXTNOTE.stopNcSocket();
-        return;
-    } else if (window.justSelected) {
-        window.justSelected = false;
+var startSaveContent = function () {
+    if (window.timerSavingContent) {
         return;
     }
     
-    var contentToSend = $('#noteContent').val();
+    var checkUpdateNote = function () {
+        if (!window.noteLink) {
+            stopSaveContent();
+            return;
+        }
+        
+        var contentToSend = $('#noteContent').val();
+        
+        if (window.oldNoteContent !== contentToSend) {
+            MYTEXTNOTE.updateNoteContent(window.noteLink, contentToSend);
+            window.oldNoteContent = contentToSend;
+        }
+    };
     
-    if (window.oldNoteContent !== contentToSend) {
-        MYTEXTNOTE.updateNoteContent(window.noteLink, contentToSend);
-        window.oldNoteContent = contentToSend;
+    window.timerSavingContent = setInterval(checkUpdateNote, 2000);
+};
+
+var stopSaveContent = function () {
+    if (window.timerSavingContent) {
+        clearInterval(window.timerSavingContent);
+        delete window.timerSavingContent;
     }
+    MYTEXTNOTE.stopNcSocket();
 };
 
 jQuery( function($) {
     $(document).ready( function () {
         getNotes();
         getUserName();
-        checkUpdateNote();
         MYTEXTNOTE.initCheckSession();
         delete window.noteLink;
-        setInterval(checkUpdateNote, 2000);
     });
     
     $('.requireNote').click( function() {
@@ -104,6 +117,10 @@ jQuery( function($) {
             return false;
         }
         return true;
+    });
+    
+    $('#noteContent').keypress( function() {
+        startSaveContent();
     });
     
     $('#btnCreateNote').click( function() {
