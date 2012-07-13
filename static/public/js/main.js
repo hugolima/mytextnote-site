@@ -23,7 +23,7 @@ var updateNoteMarkers = function (liElementNote, noteName, noteContent) {
     window.oldNoteContent = $('#noteContent').val();
 };
 
-var getNoteContent = function(event, noteSelected) {
+var selectNote = function(event, noteSelected) {
     if (event) {
         event.preventDefault();
     }
@@ -31,7 +31,8 @@ var getNoteContent = function(event, noteSelected) {
         return;
     }
     
-    stopSaveContent();
+    checkUpdateContent();
+    stopUpdateContent();
     
     if (!noteSelected) {
         var that = this;
@@ -59,11 +60,11 @@ var getNotes = function (noteSelected) {
         $('#notesList').append( items.join('') );
         
         MYTEXTNOTE.iterateLi('notesList', function (i, item) {
-            $(item).on('click', getNoteContent);
+            $(item).on('click', selectNote);
         });
         
         if (noteSelected) {
-            getNoteContent('', noteSelected);
+            selectNote('', noteSelected);
         }
     });
 };
@@ -74,34 +75,34 @@ var getUserName = function () {
     });
 };
 
-var startSaveContent = function () {
+var checkUpdateContent = function () {
+    if (!window.noteLink) {
+        stopUpdateContent();
+        return;
+    }
+    
+    var contentToSend = $('#noteContent').val();
+    
+    if (window.oldNoteContent !== contentToSend) {
+        MYTEXTNOTE.updateNoteContent(window.noteLink, contentToSend);
+        window.oldNoteContent = contentToSend;
+    }
+};
+
+var startUpdateContent = function () {
     if (window.timerSavingContent) {
         return;
     }
     
-    var checkUpdateNote = function () {
-        if (!window.noteLink) {
-            stopSaveContent();
-            return;
-        }
-        
-        var contentToSend = $('#noteContent').val();
-        
-        if (window.oldNoteContent !== contentToSend) {
-            MYTEXTNOTE.updateNoteContent(window.noteLink, contentToSend);
-            window.oldNoteContent = contentToSend;
-        }
-    };
-    
-    window.timerSavingContent = setInterval(checkUpdateNote, 2000);
+    checkUpdateContent();
+    window.timerSavingContent = setInterval(checkUpdateContent, 2000);
 };
 
-var stopSaveContent = function () {
+var stopUpdateContent = function () {
     if (window.timerSavingContent) {
         clearInterval(window.timerSavingContent);
         delete window.timerSavingContent;
     }
-    MYTEXTNOTE.stopNcSocket();
 };
 
 jQuery( function($) {
@@ -120,7 +121,7 @@ jQuery( function($) {
     });
     
     $('#noteContent').keypress( function() {
-        startSaveContent();
+        startUpdateContent();
     });
     
     $('#btnCreateNote').click( function() {

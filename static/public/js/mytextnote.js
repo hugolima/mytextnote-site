@@ -1,5 +1,6 @@
 var MYTEXTNOTE = (function () {
     var timeoutMsgErro,
+        timerSocketInactivity,
         ncSocket;
     
     var showMsg = function (msg) {
@@ -89,24 +90,30 @@ var MYTEXTNOTE = (function () {
         $('#' + idUl).find('li').each(fn);
     };
     
-    var updateNoteContent = function (link, content) {
-        if (!ncSocket) {
-            ncSocket = io.connect('/noteContentSocket', {'force new connection': true});
-            ncSocket.on('connect', function () {
-                ncSocket.on('message', function (msg) {
-                    showMsg(msg);
-                });
-            });
-        }
-        
-        ncSocket.emit('updateNoteContent', {'link': link, 'content': content});
-    };
-    
     var stopNcSocket = function () {
         if (ncSocket) {
             ncSocket.socket.disconnect();
             ncSocket = undefined;
         }
+    };
+    
+    var resetSocketInactivity = function () {
+        window.clearTimeout(timerSocketInactivity);
+        timerSocketInactivity = window.setTimeout(stopNcSocket, 300000);
+    };
+    
+    var updateNoteContent = function (link, content) {
+        if (!ncSocket) {
+            ncSocket = io.connect('/noteContentSocket', {'force new connection': true});
+            ncSocket.on('connect', function () {
+                this.on('message', function (msg) {
+                    showMsg(msg);
+                });
+            });
+        }
+        
+        resetSocketInactivity();
+        ncSocket.emit('updateNoteContent', {'link': link, 'content': content});
     };
     
     return {
@@ -116,7 +123,6 @@ var MYTEXTNOTE = (function () {
         'initCheckSession': initCheckSession,
         'clickOnEnter': clickOnEnter,
         'iterateLi': iterateLi,
-        'updateNoteContent': updateNoteContent,
-        'stopNcSocket': stopNcSocket
+        'updateNoteContent': updateNoteContent
     };
 }());
