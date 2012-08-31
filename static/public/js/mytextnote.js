@@ -1,4 +1,4 @@
-var MYTEXTNOTE = (function () {
+window.MYTEXTNOTE = (function () {
     var timeoutMsgErro,
         timerSocketInactivity,
         ncSocket;
