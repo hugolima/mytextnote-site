@@ -1,5 +1,8 @@
 window.MAIN = (function (COMMON) {
     
+    var paddingsBody = 60 + 40,
+        paddingsElementsSizeContainer = 37 + 20 + 23;
+    
     if (!COMMON) {
         throw new Error('It\'s necessary a MYTEXTNOTE object!')
     }
@@ -115,11 +118,31 @@ window.MAIN = (function (COMMON) {
         }
     };
     
+    var adjustElementsHeightOfContainer = function () {
+        var panelContent = $('#panelNoteContent'),
+            panelNoContent = $('#panelNoNoteContent');
+        
+        panelContent.height($(window).height() - paddingsBody);
+        panelNoContent.height($(window).height() - paddingsBody - 20);
+        
+        if (panelContent.height() < 300 || panelNoContent.height() < 300) {
+            panelContent.height(300);
+            panelNoContent.height(300);
+        }
+        
+        $('#noteContent').height(panelContent.height() - paddingsElementsSizeContainer);
+    };
+    
     jQuery( function($) {
         $(document).ready( function () {
+            adjustElementsHeightOfContainer();
             getNotes();
             getUserName();
             COMMON.initCheckSession();
+        });
+        
+        $(window).on('resize', function () {
+            adjustElementsHeightOfContainer();
         });
         
         $('.requireNote').click( function() {
