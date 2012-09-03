@@ -1,15 +1,14 @@
 window.MAIN = (function (COMMON) {
     
-    var paddingsBody = 60 + 40,
-        paddingsElementsSizeContainer = 37 + 20 + 23;
-    
     if (!COMMON) {
         throw new Error('It\'s necessary a MYTEXTNOTE object!')
     }
     
     var noteLink,
         oldNoteContent,
-        timerSavingContent;
+        timerSavingContent,
+        paddingsBody = 60 + 40,
+        paddingsElementsSizeContainer = 37 + 20 + 23;;
     
     var checkLinkOperations = function () {
         $('#liLnkDelete').removeClass('disabled active');
