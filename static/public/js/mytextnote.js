@@ -1,18 +1,19 @@
 window.MYTEXTNOTE = (function () {
     
-    var timeoutMsgErro,
-        timerSocketInactivity,
+    var timerSocketInactivity,
         ncSocket;
     
     var showMsg = function (msg) {
         if ($('#generalErrorMsg').length) {
-            $('#generalErrorMsg').find('span').html(msg);
+            var htmlCloseButton = '<span id="closeErrorMsg" style="padding-left: 20px;"><b><u><a href="#" style="color:#B94A48;">Dismiss</a></u></b></span>';
+            
+            $('#generalErrorMsg').find('span').html(msg + htmlCloseButton);
             $('#generalErrorMsg').removeClass('hide');
             
-            clearTimeout(timeoutMsgErro);
-            timeoutMsgErro = setTimeout(function () {
+            $('#closeErrorMsg').on('click', function (event) {
+                event.preventDefault();
                 $('#generalErrorMsg').addClass('hide');
-            }, 20000);
+            });
             
             return;
         } 
@@ -53,7 +54,7 @@ window.MYTEXTNOTE = (function () {
         });
         request.fail(function (jqXHR, textStatus) {
             restoreToDefaults();
-            showMsg('<strong>Oops!</strong> Something goes wrong on your request, try again later');
+            showMsg('<strong>Oops!</strong> Something goes wrong on your request, try again later.');
         });
     };
     

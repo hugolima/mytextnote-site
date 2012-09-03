@@ -37,8 +37,8 @@
           <div class="nav-collapse">
             <ul class="nav" role="navigation">
               <li class="dropdown">
-                <a class="dropdown-toggle brand" style="color: #FFFFFF;" id="dLabel" role="button" data-toggle="dropdown" href="#">Notes <b style="color: #FFFFFF;" class="caret"></b></a>
-                <ul id="notesList" class="dropdown-menu" role="menu" aria-labelledby="dLabel" style="padding: 10px 20px 10px 10px;">
+                <a class="dropdown-toggle brand" style="color: #FFFFFF;" data-toggle="dropdown" href="#">Notes <b class="caret" style="color: #FFFFFF;"></b></a>
+                <ul id="notesList" class="dropdown-menu" role="menu" style="padding: 10px 20px 10px 10px;">
                   <!--
                   <li class="fileitem" id='id'><a href="#">Nota 1</a></li>
                   <li class="active, fileitem" id='id2'><a href="#">Nota 2</a></li>
@@ -52,12 +52,12 @@
               <li id="liLnkRename" class="disabled requireNote"><a id="lnkRename" data-toggle="modal" href="#modalRenameNote">Rename</a></li>
               <li id="liLnkDelete" class="disabled requireNote"><a id="lnkDelete" data-toggle="modal" href="#modalDeleteNote">Delete</a></li>
             </ul>
-            <p class="navbar-text pull-right"><a id="userName" href="#">User name</a> | <a href="/user/logout">Log out</a></p>
+            <p class="navbar-text pull-right"><a id="userName" href="#" style="padding-right: 15px;">User name</a>|<a href="/user/logout" style="padding-left: 15px;">Log out</a></p>
           </div><!--/.nav-collapse -->
         </div>
       </div>
       <div align="center">
-        <div id="generalErrorMsg" class="alert alert-error hide" style="width: 360px; text-align: center;">
+        <div id="generalErrorMsg" class="alert alert-error hide" style="width: 440px; text-align: center;">
           <span></span>
         </div>
       </div>
@@ -67,9 +67,9 @@
       <div class="row-fluid">
         <div class="span12">
           <div id="panelNoteContent" class="hero-unit hide" style="padding: 10px 20px;">
-            <h3 id="labelFileName" style="padding-bottom: 10px;"></h3>
+            <h3 id="labelFileName" style="padding-bottom: 10px; font-size: 17px;"></h3>
             <div class="input">
-              <textarea id="noteContent" class="xxlarge" style="width: 100%; padding-right: 0px; padding-left: 0px;"></textarea>
+              <textarea id="noteContent" class="xxlarge" style="width: 100%; padding-right: 0px; padding-left: 0px; font-size: 15px; line-height: 22px;"></textarea>
               <span class="help-block">just edit the note, it's saved automatically</span>
             </div>
           </div>
