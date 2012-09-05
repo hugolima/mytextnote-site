@@ -80,18 +80,6 @@ window.MYTEXTNOTE = (function () {
         setTimeout(checkSession, 145000);
     };
     
-    var clickOnEnter = function (idBtn) {
-        return function (e) {
-            if (e.which === 13) {
-                $('#' + idBtn).click();
-            }
-        };
-    };
-    
-    var iterateLi = function (idUl, fn) {
-        $('#' + idUl).find('li').each(fn);
-    };
-    
     var stopNcSocket = function () {
         if (ncSocket) {
             ncSocket.socket.disconnect();
@@ -118,13 +106,61 @@ window.MYTEXTNOTE = (function () {
         ncSocket.emit('updateNoteContent', {'link': link, 'content': content});
     };
     
+    var clickOnEnter = function (idBtn) {
+        $(document).on('keypress', function (event) {
+            if (event.which === 13) {
+                event.preventDefault();
+                $('#' + idBtn).click();
+            }
+        });
+    };
+    
+    var clearClickOnEnter = function () {
+        $(document).off('keypress');
+    };
+    
+    var iterateLi = function (idUl, fn) {
+        $('#' + idUl).find('li').each(fn);
+    };
+    
+    var by = function (name) {
+        return function (o, p) {
+            var a, b;
+            if (typeof o === 'object' && typeof p === 'object' && o && p) {
+                a = typeof o[name] === 'string' ? o[name].toUpperCase() : o[name];
+                b = typeof p[name] === 'string' ? p[name].toUpperCase() : p[name];
+                
+                if (a === b) {
+                    return 0;
+                }
+                
+                if (typeof a === typeof b) {
+                    return a < b ? -1 : 1;
+                }
+                
+                return typeof a < typeof b ? -1 : 1;
+            } else {
+                throw {
+                    name: 'Error',
+                    message: 'This array does not contains objects'
+                };
+            }
+        };
+    };
+    
+    var sortObjArray = function (array, propertyName) {
+        array.sort( by(propertyName) );
+    };
+    
     return {
         'sendGET': sendGET,
         'sendPOST': sendPOST,
         'sendDELETE': sendDELETE,
         'initCheckSession': initCheckSession,
         'clickOnEnter': clickOnEnter,
+        'clearClickOnEnter': clearClickOnEnter,
         'iterateLi': iterateLi,
-        'updateNoteContent': updateNoteContent
+        'updateNoteContent': updateNoteContent,
+        'sortObjArray': sortObjArray
     };
 }());

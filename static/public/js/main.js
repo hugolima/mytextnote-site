@@ -8,7 +8,7 @@ window.MAIN = (function (COMMON) {
         oldNoteContent,
         timerSavingContent,
         paddingsBody = 60 + 40,
-        paddingsElementsSizeContainer = 37 + 20 + 23;;
+        paddingsElementsSizeContainer = 37 + 20 + 23;
     
     var checkLinkOperations = function () {
         $('#liLnkDelete').removeClass('disabled active');
@@ -63,6 +63,7 @@ window.MAIN = (function (COMMON) {
     var getNotes = function (noteSelected) {
         COMMON.sendGET('/notes', function(data) {
             var items = [];
+            COMMON.sortObjArray(data.object, 'name');
             
             $.each(data.object, function(i, item) {
                 items.push('<li id="' + item.link + '"><a href="#">' + item.name + '</a></li>');
@@ -210,19 +211,28 @@ window.MAIN = (function (COMMON) {
             $('#noteName').val('');
             $('#msgNoteName').addClass('hide');
             $('#inputNameGroup').removeClass('error');
+            COMMON.clearClickOnEnter();
         });
         
         $('#modalRenameNote').on('hidden', function () {
             $('#newNoteName').val('');
             $('#msgNewNoteName').addClass('hide');
             $('#inputNewNameGroup').removeClass('error');
+            COMMON.clearClickOnEnter();
         });
         
-        $('#modalRenameNote').on('show', function () {
+        $('#modalCreateNote').on('shown', function () {
+            $('#noteName').focus();
+            COMMON.clickOnEnter('btnCreateNote');
+        });
+        
+        $('#modalRenameNote').on('shown', function () {
             $('#newNoteName').val($('#labelFileName').html());
+            $('#newNoteName').focus();
+            COMMON.clickOnEnter('btnRenameNote');
         });
         
-        $('#modalDeleteNote').on('show', function () {
+        $('#modalDeleteNote').on('shown', function () {
             $('#noteNameDelete').html('<b>' + $('#labelFileName').html() + '</b>');
         });
     });

@@ -1,6 +1,7 @@
 jQuery( function($) {
     
-    $(document).keypress(MYTEXTNOTE.clickOnEnter('btnSignin'));
+    $('#login').focus();
+    MYTEXTNOTE.clickOnEnter('btnSignin');
     
     $('#btnSignin').click( function() {
         if (!$('#login').val() || !$('#password').val()) {
