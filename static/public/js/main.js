@@ -1,4 +1,4 @@
-window.MAIN = (function (COMMON) {
+(function (COMMON) {
     
     if (!COMMON) {
         throw new Error('It\'s necessary a MYTEXTNOTE object!')
