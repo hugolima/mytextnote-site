@@ -7,8 +7,8 @@ window.MAIN = (function (COMMON) {
     var noteLink,
         oldNoteContent,
         timerSavingContent,
-        paddingsBody = 60 + 40,
-        paddingsElementsSizeContainer = 37 + 20 + 23;
+        paddingsBody = ( $('body').innerHeight() - $('body').height() ),
+        paddingsAndElementsSizeOfPanel = 32 + 20 + 18; // labelName + padding panel + help-block
     
     var checkLinkOperations = function () {
         $('#liLnkDelete').removeClass('disabled active');
@@ -130,7 +130,7 @@ window.MAIN = (function (COMMON) {
             panelNoContent.height(300);
         }
         
-        $('#noteContent').height(panelContent.height() - paddingsElementsSizeContainer);
+        $('#noteContent').height(panelContent.height() - paddingsAndElementsSizeOfPanel);
     };
     
     jQuery( function($) {
