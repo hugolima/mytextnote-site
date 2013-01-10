@@ -69,8 +69,8 @@
                 items.push('<li id="' + item.link + '"><a href="#">' + item.name + '</a></li>');
             });
             
-            $('#notesList').empty();
-            $('#notesList').append( items.join('') );
+            $('#notesList').children("div").empty();
+            $('#notesList').children("div").append( items.join('') );
             
             COMMON.iterateLi('notesList', function (i, item) {
                 $(item).on('click', selectNote);
@@ -120,7 +120,8 @@
     
     var adjustElementsHeightOfContainer = function () {
         var panelContent = $('#panelNoteContent'),
-            panelNoContent = $('#panelNoNoteContent');
+            panelNoContent = $('#panelNoNoteContent'),
+            noteListDiv = $('#notesListDiv');
         
         panelContent.height($(window).height() - paddingsBody);
         panelNoContent.height($(window).height() - paddingsBody - 20);
@@ -130,6 +131,7 @@
             panelNoContent.height(300);
         }
         
+        noteListDiv.height(panelContent.height());
         $('#noteContent').height(panelContent.height() - paddingsAndElementsSizeOfPanel);
     };
     
