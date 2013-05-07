@@ -6,9 +6,7 @@
     
     var noteLink,
         oldNoteContent,
-        timerSavingContent,
-        paddingsBody = ( $('body').innerHeight() - $('body').height() ),
-        paddingsAndElementsSizeOfPanel = 32 + 20 + 18; // labelName + padding panel + help-block
+        timerSavingContent;
     
     var checkLinkOperations = function () {
         $('#liLnkDelete').removeClass('disabled active');
@@ -121,17 +119,18 @@
     var adjustElementsHeightOfContainer = function () {
         var panelContent = $('#panelNoteContent'),
             panelNoContent = $('#panelNoNoteContent'),
-            noteListDiv = $('#notesListDiv');
+            noteListDiv = $('#notesListDiv'),
+            paddingsAndElementsSizeOfPanel = 32 + 20 + 18; // labelName + padding panel + help-block
         
-        panelContent.height($(window).height() - paddingsBody);
-        panelNoContent.height($(window).height() - paddingsBody - 20);
+        panelContent.height($(window).height() - 100);
+        panelNoContent.height($(window).height() - 120);
         
         if (panelContent.height() < 300 || panelNoContent.height() < 300) {
             panelContent.height(300);
             panelNoContent.height(300);
         }
         
-        noteListDiv.height(panelContent.height());
+        noteListDiv.height(panelContent.height() - 50);
         $('#noteContent').height(panelContent.height() - paddingsAndElementsSizeOfPanel);
     };
     
