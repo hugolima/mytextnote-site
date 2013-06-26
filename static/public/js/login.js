@@ -1,7 +1,6 @@
 jQuery( function($) {
-    
     $('#login').focus();
-    MYTEXTNOTE.clickOnEnter('btnSignin');
+    MYTN.COMMON.clickOnEnter('btnSignin');
     
     $('#btnSignin').click( function() {
         if (!$('#login').val() || !$('#password').val()) {
@@ -13,15 +12,21 @@ jQuery( function($) {
         var btn = $(this);
         btn.button('loading');
         
-        MYTEXTNOTE.sendPOST('/user/login', {login: $('#login').val(), password: $('#password').val()},
-            function(data) {
+        MYTN.SERVER.send({
+            method: 'POST',
+            url: '/user/login',
+            params: {login: $('#login').val(), password: $('#password').val()},
+            callbackOnError: true,
+            callback: function(error, data) {
+                if (error) {
+                    btn.button('reset');
+                    $('#msgLoginFailed').html(error.message);
+                    $('#msgLoginFailed').removeClass('hide');
+                    return;
+                }
+                
                 window.location.replace(data.object.nextPage);
-            },
-            function(msg) {
-                btn.button('reset');
-                $('#msgLoginFailed').html(msg);
-                $('#msgLoginFailed').removeClass('hide');
             }
-        );
+        });
     });
 });

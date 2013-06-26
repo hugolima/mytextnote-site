@@ -1,12 +1,24 @@
-(function (COMMON) {
-    
-    if (!COMMON) {
-        throw new Error('It\'s necessary a MYTEXTNOTE object!')
-    }
-    
+(function () {
     var noteLink,
         oldNoteContent,
         timerSavingContent;
+    
+    MYTN.COMMON.showGenericMsg = function (msg) {
+        if ($('#generalErrorMsg').length) {
+            var htmlCloseButton = '<span id="closeErrorMsg" style="padding-left: 20px;"><b><u><a href="#" style="color:#B94A48;">Dismiss</a></u></b></span>';
+            
+            $('#generalErrorMsg').find('span').html(msg + htmlCloseButton);
+            $('#generalErrorMsg').removeClass('hide');
+            
+            $('#closeErrorMsg').on('click', function (event) {
+                event.preventDefault();
+                $('#generalErrorMsg').addClass('hide');
+            });
+            
+            return;
+        } 
+        alert(msg);
+    };
     
     var checkLinkOperations = function () {
         $('#liLnkDelete').removeClass('disabled active');
@@ -46,10 +58,14 @@
         
         if (!noteSelected) {
             var that = this;
-            COMMON.sendGET(this.id, function(data) {
-                noteLink = that.id;
-                updateNoteMarkers($(that), data.object.name, data.object.content);
-                checkLinkOperations();
+            MYTN.SERVER.send({
+                method: 'GET',
+                url: this.id,
+                callback: function(err, data) {
+                    noteLink = that.id;
+                    updateNoteMarkers($(that), data.object.name, data.object.content);
+                    checkLinkOperations();
+                }
             });
         } else {
             noteLink = noteSelected.link;
@@ -59,30 +75,38 @@
     };
     
     var getNotes = function (noteSelected) {
-        COMMON.sendGET('/notes', function(data) {
-            var items = [];
-            COMMON.sortObjArray(data.object, 'name');
-            
-            $.each(data.object, function(i, item) {
-                items.push('<li id="' + item.link + '"><a href="#">' + item.name + '</a></li>');
-            });
-            
-            $('#notesList').children("div").empty();
-            $('#notesList').children("div").append( items.join('') );
-            
-            COMMON.iterateLi('notesList', function (i, item) {
-                $(item).on('click', selectNote);
-            });
-            
-            if (noteSelected) {
-                selectNote('', noteSelected);
+        MYTN.SERVER.send({
+            method: 'GET',
+            url: '/notes',
+            callback: function(err, data) {
+                var items = [];
+                MYTN.COMMON.sortObjArray(data.object, 'name');
+                
+                $.each(data.object, function(i, item) {
+                    items.push('<li id="' + item.link + '"><a href="#">' + item.name + '</a></li>');
+                });
+                
+                $('#notesList').children("div").empty();
+                $('#notesList').children("div").append( items.join('') );
+                
+                MYTN.COMMON.iterateLi('notesList', function (i, item) {
+                    $(item).on('click', selectNote);
+                });
+                
+                if (noteSelected) {
+                    selectNote('', noteSelected);
+                }
             }
         });
     };
     
     var getUserName = function () {
-        COMMON.sendGET('/user/name', function(data) {
-            $('#userName').html( data.object );
+        MYTN.SERVER.send({
+            method: 'GET',
+            url: '/user/name',
+            callback: function(err, data) {
+                $('#userName').html( data.object );
+            }
         });
     };
     
@@ -95,7 +119,7 @@
         var contentToSend = $('#noteContent').val();
         
         if (oldNoteContent !== contentToSend) {
-            COMMON.updateNoteContent(noteLink, contentToSend);
+            MYTN.updateNoteContent(noteLink, contentToSend);
             oldNoteContent = contentToSend;
         }
     };
@@ -139,7 +163,7 @@
             adjustElementsHeightOfContainer();
             getNotes();
             getUserName();
-            COMMON.initCheckSession();
+            MYTN.SESSION.initCheck();
         });
         
         $(window).on('resize', function () {
@@ -167,10 +191,15 @@
             var btnSave = $(this);
             btnSave.button('loading');
             
-            COMMON.sendPOST('/notes/add', {name: $('#noteName').val()}, function(data) {
-                btnSave.button('reset');
-                $('#modalCreateNote').modal('hide');
-                getNotes(data.object);
+            MYTN.SERVER.send({
+                method: 'POST',
+                url: '/notes/add',
+                params: {name: $('#noteName').val()},
+                callback: function(err, data) {
+                    btnSave.button('reset');
+                    $('#modalCreateNote').modal('hide');
+                    getNotes(data.object);
+                }
             });
         });
         
@@ -184,11 +213,16 @@
             var btnSave = $(this);
             btnSave.button('loading');
             
-            COMMON.sendPOST(noteLink, {newName: $('#newNoteName').val()}, function(data) {
-                btnSave.button('reset');
-                $('#labelFileName').html($('#newNoteName').val());
-                $('li[id="' + noteLink + '"]').children('a').html($('#newNoteName').val());
-                $('#modalRenameNote').modal('hide');
+            MYTN.SERVER.send({
+                method: 'POST',
+                url: noteLink,
+                params: {newName: $('#newNoteName').val()},
+                callback: function() {
+                    btnSave.button('reset');
+                    $('#labelFileName').html($('#newNoteName').val());
+                    $('li[id="' + noteLink + '"]').children('a').html($('#newNoteName').val());
+                    $('#modalRenameNote').modal('hide');
+                }
             });
         });
         
@@ -196,15 +230,19 @@
             var btnDeleteNote = $(this);
             btnDeleteNote.button('loading');
             
-            COMMON.sendDELETE(noteLink, function() {
-                btnDeleteNote.button('reset');
-                noteLink = undefined;
-                checkLinkOperations();
-                getNotes();
-                
-                $('#panelNoteContent').addClass('hide');
-                $('#panelNoNoteContent').removeClass('hide');
-                $('#modalDeleteNote').modal('hide');
+            MYTN.SERVER.send({
+                method: 'DELETE',
+                url: noteLink,
+                callback: function() {
+                    btnDeleteNote.button('reset');
+                    noteLink = undefined;
+                    checkLinkOperations();
+                    getNotes();
+                    
+                    $('#panelNoteContent').addClass('hide');
+                    $('#panelNoNoteContent').removeClass('hide');
+                    $('#modalDeleteNote').modal('hide');
+                }
             });
         });
         
@@ -212,29 +250,29 @@
             $('#noteName').val('');
             $('#msgNoteName').addClass('hide');
             $('#inputNameGroup').removeClass('error');
-            COMMON.clearClickOnEnter();
+            MYTN.COMMON.clearClickOnEnter();
         });
         
         $('#modalRenameNote').on('hidden', function () {
             $('#newNoteName').val('');
             $('#msgNewNoteName').addClass('hide');
             $('#inputNewNameGroup').removeClass('error');
-            COMMON.clearClickOnEnter();
+            MYTN.COMMON.clearClickOnEnter();
         });
         
         $('#modalCreateNote').on('shown', function () {
             $('#noteName').focus();
-            COMMON.clickOnEnter('btnCreateNote');
+            MYTN.COMMON.clickOnEnter('btnCreateNote');
         });
         
         $('#modalRenameNote').on('shown', function () {
             $('#newNoteName').val($('#labelFileName').html());
             $('#newNoteName').focus();
-            COMMON.clickOnEnter('btnRenameNote');
+            MYTN.COMMON.clickOnEnter('btnRenameNote');
         });
         
         $('#modalDeleteNote').on('shown', function () {
             $('#noteNameDelete').html('<b>' + $('#labelFileName').html() + '</b>');
         });
     });
-}(window.MYTEXTNOTE));
+}());
