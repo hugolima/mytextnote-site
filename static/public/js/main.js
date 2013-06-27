@@ -58,14 +58,11 @@
         
         if (!noteSelected) {
             var that = this;
-            MYTN.SERVER.send({
-                method: 'GET',
-                url: this.id,
-                callback: function(err, data) {
-                    noteLink = that.id;
-                    updateNoteMarkers($(that), data.object.name, data.object.content);
-                    checkLinkOperations();
-                }
+            
+            MYTN.NOTES.get(this.id, function(note) {
+                noteLink = that.id;
+                updateNoteMarkers($(that), note.name, note.content);
+                checkLinkOperations();
             });
         } else {
             noteLink = noteSelected.link;
@@ -75,37 +72,23 @@
     };
     
     var getNotes = function (noteSelected) {
-        MYTN.SERVER.send({
-            method: 'GET',
-            url: '/notes',
-            callback: function(err, data) {
-                var items = [];
-                MYTN.COMMON.sortObjArray(data.object, 'name');
-                
-                $.each(data.object, function(i, item) {
-                    items.push('<li id="' + item.link + '"><a href="#">' + item.name + '</a></li>');
-                });
-                
-                $('#notesList').children("div").empty();
-                $('#notesList').children("div").append( items.join('') );
-                
-                MYTN.COMMON.iterateLi('notesList', function (i, item) {
-                    $(item).on('click', selectNote);
-                });
-                
-                if (noteSelected) {
-                    selectNote('', noteSelected);
-                }
-            }
-        });
-    };
-    
-    var getUserName = function () {
-        MYTN.SERVER.send({
-            method: 'GET',
-            url: '/user/name',
-            callback: function(err, data) {
-                $('#userName').html( data.object );
+        MYTN.NOTES.list( function(notes) {
+            var items = [];
+            MYTN.COMMON.sortObjArray(notes, 'name');
+            
+            $.each(notes, function(i, item) {
+                items.push('<li id="' + item.link + '"><a href="#">' + item.name + '</a></li>');
+            });
+            
+            $('#notesList').children("div").empty();
+            $('#notesList').children("div").append( items.join('') );
+            
+            MYTN.COMMON.iterateLi('notesList', function (i, item) {
+                $(item).on('click', selectNote);
+            });
+            
+            if (noteSelected) {
+                selectNote('', noteSelected);
             }
         });
     };
@@ -167,8 +150,10 @@
         $(document).ready( function () {
             adjustElementsHeightOfContainer();
             getNotes();
-            getUserName();
             MYTN.SESSION.initCheck();
+            MYTN.USER.getName( function (name) {
+                $('#userName').html( name );
+            });
         });
         
         $(window).on('resize', function () {

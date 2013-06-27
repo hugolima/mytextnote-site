@@ -1,5 +1,5 @@
 window.MYTN = (function () {
-    var COMMON, SERVER, SESSION, WEBSOCKET;
+    var COMMON, SERVER, SESSION, WEBSOCKET, USER, NOTES;
     
     COMMON = (function () {
         var restoreToDefaults, showGenericMsg, clickOnEnter, clearClickOnEnter, iterateLi, by, sortObjArray;
@@ -174,7 +174,54 @@ window.MYTN = (function () {
         }
     })();
     
+    USER = (function () {
+        var getName = function (callback) {
+            SERVER.send({
+                method: 'GET',
+                url: '/user/name',
+                callback: function(err, data) {
+                    callback( data.object );
+                }
+            });
+        }
+        
+        return {
+            'getName': getName
+        }
+    })();
+    
+    NOTES = (function () {
+        var get, list;
+        
+        get = function (link, callback) {
+            SERVER.send({
+                method: 'GET',
+                url: link,
+                callback: function(err, data) {
+                    callback( data.object );
+                }
+            });
+        };
+        
+        list = function (callback) {
+            SERVER.send({
+                method: 'GET',
+                url: '/notes',
+                callback: function(err, data) {
+                    callback( data.object );
+                }
+            });
+        };
+        
+        return {
+            'get': get,
+            'list': list
+        }
+    })();
+    
     return {
+        'USER': USER,
+        'NOTES': NOTES,
         'SERVER': SERVER,
         'COMMON': COMMON,
         'SESSION': SESSION,
