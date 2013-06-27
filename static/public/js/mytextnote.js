@@ -1,5 +1,5 @@
 window.MYTN = (function () {
-    var COMMON, SERVER, SESSION;
+    var COMMON, SERVER, SESSION, WEBSOCKET;
     
     COMMON = (function () {
         var restoreToDefaults, showGenericMsg, clickOnEnter, clearClickOnEnter, iterateLi, by, sortObjArray;
@@ -113,7 +113,6 @@ window.MYTN = (function () {
             'timeout': timeout,
             'send': sendAjax
         };
-        
     })();
     
     SESSION = (function () {
@@ -136,39 +135,49 @@ window.MYTN = (function () {
         };
     })();
     
-    var timerSocketInactivity,
-        ncSocket;
-    
-    var stopNcSocket = function () {
-        if (ncSocket) {
-            ncSocket.socket.disconnect();
-            ncSocket = undefined;
-        }
-    };
-    
-    var resetSocketInactivity = function () {
-        window.clearTimeout(timerSocketInactivity);
-        timerSocketInactivity = window.setTimeout(stopNcSocket, 300000);
-    };
-    
-    var updateNoteContent = function (link, content) {
-        if (!ncSocket) {
-            ncSocket = io.connect('/noteContentSocket', {'force new connection': true});
-            ncSocket.on('connect', function () {
-                this.on('message', function (msg) {
-                    COMMON.showGenericMsg(msg);
-                });
-            });
+    WEBSOCKET = (function () {
+        var resetInactivity, WebSocket;
+        
+        resetInactivity = function (timer, socket) {
+            var disconnect = function () {
+                if (socket) {
+                    socket.socket.disconnect();
+                    socket.socket = undefined;
+                }
+            };
+            
+            window.clearTimeout(timer);
+            return window.setTimeout(disconnect, 300000);
+        };
+        
+        WebSocket = function (url) {
+            this.url = url;
+            this.socket = {};
         }
         
-        resetSocketInactivity();
-        ncSocket.emit('updateNoteContent', {'link': link, 'content': content});
-    };
+        WebSocket.prototype.emit = function (event, data) {
+            if (!this.socket.socket) {
+                this.socket = io.connect( this.url, {'force new connection': true} );
+                this.socket.on('connect', function () {
+                    this.on('message', function (msg) {
+                        COMMON.showGenericMsg(msg);
+                    });
+                });
+            }
+            
+            this.socket.emit(event, data);
+            this.timerInactivity = resetInactivity( this.timerInactivity, this.socket );
+        };
+        
+        return {
+            'notesSocket': new WebSocket('/notesSocket')
+        }
+    })();
     
     return {
         'SERVER': SERVER,
         'COMMON': COMMON,
         'SESSION': SESSION,
-        'updateNoteContent': updateNoteContent
+        'WEBSOCKET': WEBSOCKET
     };
 }());
