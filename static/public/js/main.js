@@ -119,7 +119,12 @@
         var contentToSend = $('#noteContent').val();
         
         if (oldNoteContent !== contentToSend) {
-            MYTN.updateNoteContent(noteLink, contentToSend);
+            MYTN.WEBSOCKET['notesSocket']
+                .emit('updateNoteContent', {
+                    'link': noteLink,
+                    'content': contentToSend
+                });
+                
             oldNoteContent = contentToSend;
         }
     };
