@@ -213,18 +213,60 @@ window.MYTN = (function () {
             });
         };
         
+        add = function (name, callback) {
+            SERVER.send({
+                method: 'POST',
+                url: '/notes/add',
+                params: {'name': name},
+                callback: function(err, data) {
+                    callback( data.object );
+                }
+            });
+        };
+        
+        rename = function (noteLink, newName, callback) {
+            SERVER.send({
+                method: 'POST',
+                url: noteLink,
+                params: {'newName': newName},
+                callback: function() {
+                    callback();
+                }
+            });
+        };
+        
+        remove = function (noteLink, callback) {
+            SERVER.send({
+                method: 'DELETE',
+                url: noteLink,
+                callback: function() {
+                    callback();
+                }
+            });
+        };
+        
+        updateContent = function (noteLink, newContent) {
+            WEBSOCKET['notesSocket']
+                .emit('updateNoteContent', {
+                    'link': noteLink,
+                    'content': newContent
+                });
+        };
+        
         return {
             'get': get,
-            'list': list
+            'list': list,
+            'add': add,
+            'rename': rename,
+            'remove': remove,
+            'updateContent': updateContent
         }
     })();
     
     return {
         'USER': USER,
         'NOTES': NOTES,
-        'SERVER': SERVER,
         'COMMON': COMMON,
-        'SESSION': SESSION,
-        'WEBSOCKET': WEBSOCKET
+        'SESSION': SESSION
     };
 }());

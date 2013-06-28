@@ -102,12 +102,7 @@
         var contentToSend = $('#noteContent').val();
         
         if (oldNoteContent !== contentToSend) {
-            MYTN.WEBSOCKET['notesSocket']
-                .emit('updateNoteContent', {
-                    'link': noteLink,
-                    'content': contentToSend
-                });
-                
+            MYTN.NOTES.updateContent(noteLink, contentToSend);
             oldNoteContent = contentToSend;
         }
     };
@@ -181,15 +176,10 @@
             var btnSave = $(this);
             btnSave.button('loading');
             
-            MYTN.SERVER.send({
-                method: 'POST',
-                url: '/notes/add',
-                params: {name: $('#noteName').val()},
-                callback: function(err, data) {
-                    btnSave.button('reset');
-                    $('#modalCreateNote').modal('hide');
-                    getNotes(data.object);
-                }
+            MYTN.NOTES.add($('#noteName').val(), function(newNote) {
+                btnSave.button('reset');
+                $('#modalCreateNote').modal('hide');
+                getNotes(newNote);
             });
         });
         
@@ -203,16 +193,11 @@
             var btnSave = $(this);
             btnSave.button('loading');
             
-            MYTN.SERVER.send({
-                method: 'POST',
-                url: noteLink,
-                params: {newName: $('#newNoteName').val()},
-                callback: function() {
-                    btnSave.button('reset');
-                    $('#labelFileName').html($('#newNoteName').val());
-                    $('li[id="' + noteLink + '"]').children('a').html($('#newNoteName').val());
-                    $('#modalRenameNote').modal('hide');
-                }
+            MYTN.NOTES.rename(noteLink, $('#newNoteName').val(), function() {
+                btnSave.button('reset');
+                $('#labelFileName').html($('#newNoteName').val());
+                $('li[id="' + noteLink + '"]').children('a').html($('#newNoteName').val());
+                $('#modalRenameNote').modal('hide');
             });
         });
         
@@ -220,19 +205,15 @@
             var btnDeleteNote = $(this);
             btnDeleteNote.button('loading');
             
-            MYTN.SERVER.send({
-                method: 'DELETE',
-                url: noteLink,
-                callback: function() {
-                    btnDeleteNote.button('reset');
-                    noteLink = undefined;
-                    checkLinkOperations();
-                    getNotes();
-                    
-                    $('#panelNoteContent').addClass('hide');
-                    $('#panelNoNoteContent').removeClass('hide');
-                    $('#modalDeleteNote').modal('hide');
-                }
+            MYTN.NOTES.remove(noteLink, function() {
+                btnDeleteNote.button('reset');
+                noteLink = undefined;
+                checkLinkOperations();
+                getNotes();
+                
+                $('#panelNoteContent').addClass('hide');
+                $('#panelNoNoteContent').removeClass('hide');
+                $('#modalDeleteNote').modal('hide');
             });
         });
         
