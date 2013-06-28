@@ -175,7 +175,21 @@ window.MYTN = (function () {
     })();
     
     USER = (function () {
-        var getName = function (callback) {
+        var login, getName;
+        
+        login = function (login, pass, callback) {
+            SERVER.send({
+                method: 'POST',
+                url: '/user/login',
+                params: {'login': login, 'password': pass},
+                callbackOnError: true,
+                callback: function(error, data) {
+                    callback(error, data.object.nextPage);
+                }
+            });
+        }
+        
+        getName = function (callback) {
             SERVER.send({
                 method: 'GET',
                 url: '/user/name',
@@ -186,12 +200,13 @@ window.MYTN = (function () {
         }
         
         return {
-            'getName': getName
+            'getName': getName,
+            'login': login
         }
     })();
     
     NOTES = (function () {
-        var get, list;
+        var get, list, add, rename, remove, updateContent;
         
         get = function (link, callback) {
             SERVER.send({

@@ -12,21 +12,15 @@ jQuery( function($) {
         var btn = $(this);
         btn.button('loading');
         
-        MYTN.SERVER.send({
-            method: 'POST',
-            url: '/user/login',
-            params: {login: $('#login').val(), password: $('#password').val()},
-            callbackOnError: true,
-            callback: function(error, data) {
-                if (error) {
-                    btn.button('reset');
-                    $('#msgLoginFailed').html(error.message);
-                    $('#msgLoginFailed').removeClass('hide');
-                    return;
-                }
-                
-                window.location.replace(data.object.nextPage);
+        MYTN.USER.login($('#login').val(), $('#password').val(), function(err, nextPage) {
+            if (err) {
+                btn.button('reset');
+                $('#msgLoginFailed').html(err.message);
+                $('#msgLoginFailed').removeClass('hide');
+                return;
             }
+            
+            window.location.replace(nextPage);
         });
     });
 });
