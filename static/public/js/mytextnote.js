@@ -140,7 +140,7 @@ window.MYTN = (function () {
         
         resetInactivity = function (timer, socket) {
             var disconnect = function () {
-                if (socket) {
+                if (socket.socket) {
                     socket.socket.disconnect();
                     socket.socket = undefined;
                 }
