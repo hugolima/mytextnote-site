@@ -171,7 +171,7 @@
             return true;
         });
         
-        $('#noteContent').keypress( function() {
+        $('#noteContent').keydown( function() {
             $('#noteNotSaved').show();
             $('#noteSaved').hide();
             startUpdateContent();
