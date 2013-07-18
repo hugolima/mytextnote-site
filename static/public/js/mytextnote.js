@@ -136,13 +136,10 @@ window.MYTN = (function () {
     })();
     
     WEBSOCKET = (function () {
-        var resetInactivity, executeCallback, WebSocket;
+        var executeCallback, resetInactivity, WebSocket;
         
         executeCallback = function (callbacks, eventID, success) {
-            console.log('Event ID recebido do servidor: ' + eventID + " - " + success);
-            
             if (callbacks[eventID]) {
-                console.log('Executando callback para Event ID: ' + eventID + " - " + success);
                 callbacks[eventID]( success );
                 callbacks[eventID] = undefined;
             }
@@ -200,8 +197,6 @@ window.MYTN = (function () {
                 data['eventID'] = '' + this.generateEventID();
                 this.callbacks[data.eventID] = callback;
             }
-            
-            console.log('Event ID generated: ' + data.eventID);
             
             this.socket.emit(event, data);
             this.timerInactivity = resetInactivity( this.timerInactivity, this.socket );

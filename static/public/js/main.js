@@ -39,7 +39,7 @@
         liElementNote.addClass('active');
         
         $('#labelFileName').html(noteName);
-        $('#noteContent').val(noteContent);
+        $('#noteContent').val(noteContent).focus();
         oldNoteContent = $('#noteContent').val();
     };
     
@@ -94,8 +94,6 @@
     var updateSavedSign = function (ok) {
         processingUpdates -= 1;
         
-        console.log('processingUpdates diminuido: ' + processingUpdates + ' - ' + ok);
-        
         if (ok && processingUpdates <= 0) {
             $('#noteNotSaved').hide();
             $('#noteSaved').show();
@@ -114,8 +112,6 @@
             MYTN.NOTES.updateContent(noteLink, contentToSend, updateSavedSign);
             oldNoteContent = contentToSend;
             processingUpdates += 1;
-            
-            console.log('processingUpdates adicionado: ' + processingUpdates);
         }
     };
     
