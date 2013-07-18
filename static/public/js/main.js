@@ -1,7 +1,5 @@
 (function () {
-    var noteLink,
-        oldNoteContent,
-        timerSavingContent;
+    var noteLink, oldNoteContent, timerSavingContent, processingUpdates = 0;
     
     MYTN.COMMON.showGenericMsg = function (msg) {
         if ($('#generalErrorMsg').length) {
@@ -93,6 +91,17 @@
         });
     };
     
+    var updateSavedSign = function (ok) {
+        processingUpdates -= 1;
+        
+        console.log('processingUpdates diminuido: ' + processingUpdates + ' - ' + ok);
+        
+        if (ok && processingUpdates <= 0) {
+            $('#noteNotSaved').hide();
+            $('#noteSaved').show();
+        }
+    };
+    
     var checkUpdateContent = function () {
         if (!noteLink) {
             stopUpdateContent();
@@ -102,8 +111,11 @@
         var contentToSend = $('#noteContent').val();
         
         if (oldNoteContent !== contentToSend) {
-            MYTN.NOTES.updateContent(noteLink, contentToSend);
+            MYTN.NOTES.updateContent(noteLink, contentToSend, updateSavedSign);
             oldNoteContent = contentToSend;
+            processingUpdates += 1;
+            
+            console.log('processingUpdates adicionado: ' + processingUpdates);
         }
     };
     
@@ -112,6 +124,7 @@
             return;
         }
         
+        processingUpdates = 0;
         checkUpdateContent();
         timerSavingContent = setInterval(checkUpdateContent, 2000);
     };
@@ -163,6 +176,8 @@
         });
         
         $('#noteContent').keypress( function() {
+            $('#noteNotSaved').show();
+            $('#noteSaved').hide();
             startUpdateContent();
         });
         

@@ -136,7 +136,17 @@ window.MYTN = (function () {
     })();
     
     WEBSOCKET = (function () {
-        var resetInactivity, WebSocket;
+        var resetInactivity, executeCallback, WebSocket;
+        
+        executeCallback = function (callbacks, eventID, success) {
+            console.log('Event ID recebido do servidor: ' + eventID + " - " + success);
+            
+            if (callbacks[eventID]) {
+                console.log('Executando callback para Event ID: ' + eventID + " - " + success);
+                callbacks[eventID]( success );
+                callbacks[eventID] = undefined;
+            }
+        }
         
         resetInactivity = function (timer, socket) {
             var disconnect = function () {
@@ -153,17 +163,45 @@ window.MYTN = (function () {
         WebSocket = function (url) {
             this.url = url;
             this.socket = {};
+            
+            this.eventID = 0;
+            this.callbacks = {};
         }
         
-        WebSocket.prototype.emit = function (event, data) {
+        WebSocket.prototype.generateEventID = function () {
+            if (this.eventID < 100) {
+                this.eventID += 1;
+            } else {
+                this.eventID = 1;
+            }
+            
+            return this.eventID;
+        }
+        
+        WebSocket.prototype.emit = function (event, data, callback) {
+            var callbacksRef = this.callbacks;
+            
             if (!this.socket.socket) {
                 this.socket = io.connect( this.url, {'force new connection': true} );
                 this.socket.on('connect', function () {
-                    this.on('message', function (msg) {
-                        COMMON.showGenericMsg(msg);
+                    
+                    this.on('error', function (data) {
+                        COMMON.showGenericMsg(data.msg);
+                        executeCallback(callbacksRef, data.eventID, false);
+                    });
+                    
+                    this.on('success', function (eventID) {
+                        executeCallback(callbacksRef, eventID, true);
                     });
                 });
             }
+            
+            if (callback) {
+                data['eventID'] = '' + this.generateEventID();
+                this.callbacks[data.eventID] = callback;
+            }
+            
+            console.log('Event ID generated: ' + data.eventID);
             
             this.socket.emit(event, data);
             this.timerInactivity = resetInactivity( this.timerInactivity, this.socket );
@@ -260,12 +298,13 @@ window.MYTN = (function () {
             });
         };
         
-        updateContent = function (noteLink, newContent) {
-            WEBSOCKET['notesSocket']
-                .emit('updateNoteContent', {
-                    'link': noteLink,
-                    'content': newContent
-                });
+        updateContent = function (noteLink, newContent, callback) {
+            var data = {
+                'link': noteLink,
+                'content': newContent
+            };
+            
+            WEBSOCKET['notesSocket'].emit('updateNoteContent', data, callback);
         };
         
         return {
