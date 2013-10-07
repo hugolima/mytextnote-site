@@ -91,12 +91,21 @@
         });
     };
     
+    var showSavedSign = function () {
+        $('#noteNotSaved').hide();
+        $('#noteSaved').show();
+    };
+    
+    var showNotSavedSign = function () {
+        $('#noteNotSaved').show();
+        $('#noteSaved').hide();
+    };
+    
     var updateSavedSign = function (ok) {
         processingUpdates -= 1;
         
         if (ok && processingUpdates <= 0) {
-            $('#noteNotSaved').hide();
-            $('#noteSaved').show();
+            showSavedSign();
         }
     };
     
@@ -113,10 +122,23 @@
             oldNoteContent = contentToSend;
             processingUpdates += 1;
         }
+        else if (processingUpdates == 0) {
+            showSavedSign();
+        }
+    };
+    
+    var alreadyCheckingUpdates = function () {
+        if (timerSavingContent) {
+            return true;
+        }
+        
+        return false;
     };
     
     var startUpdateContent = function () {
-        if (timerSavingContent) {
+        showNotSavedSign();
+        
+        if (alreadyCheckingUpdates()) {
             return;
         }
         
@@ -172,8 +194,6 @@
         });
         
         $('#noteContent').keydown( function() {
-            $('#noteNotSaved').show();
-            $('#noteSaved').hide();
             startUpdateContent();
         });
         
