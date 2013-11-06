@@ -55,7 +55,7 @@
               <li id="liLnkRename" class="disabled requireNote"><a id="lnkRename" data-toggle="modal" data-backdrop="static" href="#modalRenameNote">Rename</a></li>
               <li id="liLnkDelete" class="disabled requireNote"><a id="lnkDelete" data-toggle="modal" data-backdrop="static" href="#modalDeleteNote">Delete</a></li>
             </ul>
-            <p class="navbar-text pull-right"><a id="userName" href="#" style="padding-right: 15px;">User name</a>|<a href="/user/logout" style="padding-left: 15px;">Logout</a></p>
+            <p class="navbar-text pull-right"><a id="userName" data-toggle="modal" data-backdrop="static" href="#modalUserData" style="padding-right: 15px;">User name</a>|<a href="/user/logout" style="padding-left: 15px;">Logout</a></p>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -134,6 +134,38 @@
       <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal">Cancel</a>
         <button id="btnDeleteNote" data-loading-text="deleting..." class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+    
+    <!-- Modal for user info -->
+    <div class="modal hide" id="modalUserData">
+      <div class="modal-header">
+        <h3>Update User Data</h3>
+      </div>
+      <div class="modal-body">
+          <div id="inputUsrNameGroup" class="control-group">
+            <label>Name *</label>
+            <input id="usrName" type="text" class="span3" maxlength="30" style="width: 300px;">
+            <span id="msgUsrName" class="help-inline hide">ops..! name is required.</span>
+          </div>
+          <div id="inputEmailGroup" class="control-group">
+            <label>E-mail *</label>
+            <input id="usrEmail" type="text" class="span3" maxlength="60" style="width: 400px;">
+            <span id="msgUsrEmail" class="help-inline hide">ops..! e-mail is required.</span>
+          </div>
+          <div id="inputPwdGroup" class="control-group">
+            <label>New Password</label>
+            <input id="usrPwd" type="text" class="span3" maxlength="10" style="width: 200px;">
+          </div>
+          <div id="inputConfPwdGroup" class="control-group">
+            <label>Confirm New Password</label>
+            <input id="usrConfPwd" type="text" class="span3" maxlength="10" style="width: 200px;">
+            <span id="msgUsrConfPwd" class="help-inline hide">ops..! it doesn't match with password.</span>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+        <button id="btnUpdateUserData" data-loading-text="updating..." class="btn btn-primary">Save</button>
       </div>
     </div>
     

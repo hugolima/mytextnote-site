@@ -136,16 +136,14 @@ window.MYTN = (function () {
     })();
     
     WEBSOCKET = (function () {
-        var executeCallback, resetInactivity, WebSocket;
-        
-        executeCallback = function (callbacks, eventID, success) {
+        var executeCallback = function (callbacks, eventID, success) {
             if (callbacks[eventID]) {
                 callbacks[eventID]( success );
                 callbacks[eventID] = undefined;
             }
-        }
+        };
         
-        resetInactivity = function (timer, socket) {
+        var resetInactivity = function (timer, socket) {
             var disconnect = function () {
                 if (socket.socket) {
                     socket.socket.disconnect();
@@ -157,13 +155,13 @@ window.MYTN = (function () {
             return window.setTimeout(disconnect, 300000);
         };
         
-        WebSocket = function (url) {
+        var WebSocket = function (url) {
             this.url = url;
             this.socket = {};
             
             this.eventID = 0;
             this.callbacks = {};
-        }
+        };
         
         WebSocket.prototype.generateEventID = function () {
             if (this.eventID < 100) {
@@ -173,7 +171,7 @@ window.MYTN = (function () {
             }
             
             return this.eventID;
-        }
+        };
         
         WebSocket.prototype.emit = function (event, data, callback) {
             var callbacksRef = this.callbacks;
@@ -208,9 +206,7 @@ window.MYTN = (function () {
     })();
     
     USER = (function () {
-        var login, getName;
-        
-        login = function (login, pass, callback) {
+        var login = function (login, pass, callback) {
             SERVER.send({
                 method: 'POST',
                 url: '/user/login',
@@ -220,9 +216,9 @@ window.MYTN = (function () {
                     callback(error, data.object.nextPage);
                 }
             });
-        }
+        };
         
-        getName = function (callback) {
+        var getName = function (callback) {
             SERVER.send({
                 method: 'GET',
                 url: '/user/name',
@@ -230,18 +226,44 @@ window.MYTN = (function () {
                     callback( data.object );
                 }
             });
-        }
+        };
+        
+        var get = function (callback) {
+            SERVER.send({
+                method: 'GET',
+                url: '/user/data',
+                callback: function(err, data) {
+                    callback( data.object );
+                }
+            });
+        };
+        
+        var update = function (name, email, pwd, confPwd, callback) {
+            SERVER.send({
+                method: 'POST',
+                url: '/user/update',
+                params: {
+                    'name': name,
+                    'email': email,
+                    'pwd': pwd,
+                    'confPwd': confPwd
+                },
+                callback: function() {
+                    callback();
+                }
+            });
+        };
         
         return {
+            'login': login,
             'getName': getName,
-            'login': login
+            'get': get,
+            'update': update
         }
     })();
     
     NOTES = (function () {
-        var get, list, add, rename, remove, updateContent;
-        
-        get = function (link, callback) {
+        var get = function (link, callback) {
             SERVER.send({
                 method: 'GET',
                 url: link,
@@ -251,7 +273,7 @@ window.MYTN = (function () {
             });
         };
         
-        list = function (callback) {
+        var list = function (callback) {
             SERVER.send({
                 method: 'GET',
                 url: '/notes',
@@ -261,7 +283,7 @@ window.MYTN = (function () {
             });
         };
         
-        add = function (name, callback) {
+        var add = function (name, callback) {
             SERVER.send({
                 method: 'POST',
                 url: '/notes/add',
@@ -272,7 +294,7 @@ window.MYTN = (function () {
             });
         };
         
-        rename = function (noteLink, newName, callback) {
+        var rename = function (noteLink, newName, callback) {
             SERVER.send({
                 method: 'POST',
                 url: noteLink,
@@ -283,7 +305,7 @@ window.MYTN = (function () {
             });
         };
         
-        remove = function (noteLink, callback) {
+        var remove = function (noteLink, callback) {
             SERVER.send({
                 method: 'DELETE',
                 url: noteLink,
@@ -293,7 +315,7 @@ window.MYTN = (function () {
             });
         };
         
-        updateContent = function (noteLink, newContent, callback) {
+        var updateContent = function (noteLink, newContent, callback) {
             var data = {
                 'link': noteLink,
                 'content': newContent

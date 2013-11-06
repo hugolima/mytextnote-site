@@ -248,6 +248,43 @@
             });
         });
         
+        $('#btnUpdateUserData').click( function() {
+            var error = 0;
+            
+            if (!$('#usrName').val() || $.trim($('#usrName').val()) === '') {
+                $('#inputUsrNameGroup').addClass('error');
+                $('#msgUsrName').removeClass('hide');
+                error++;
+            }
+            
+            if (!$('#usrEmail').val() || $.trim($('#usrEmail').val()) === '') {
+                $('#inputEmailGroup').addClass('error');
+                $('#msgUsrEmail').removeClass('hide');
+                error++;
+            }
+            
+            if ($('#usrPwd').val()) {
+                if ($.trim($('#usrPwd').val()) !== $.trim($('#usrConfPwd').val())) {
+                    $('#inputConfPwdGroup').addClass('error');
+                    $('#msgUsrConfPwd').removeClass('hide');
+                    error++;
+                }
+            }
+            
+            if (error) {
+                return;
+            }
+            
+            var btnSave = $(this);
+            btnSave.button('loading');
+            
+            MYTN.USER.update($('#usrName').val(), $('#usrEmail').val(), $('#usrPwd').val(), $('#usrConfPwd').val(), function() {
+                btnSave.button('reset');
+                $('#modalUserData').modal('hide');
+                $('#userName').html( $('#usrName').val() );
+            });
+        });
+        
         $('#modalCreateNote').on('hidden', function () {
             $('#noteName').val('');
             $('#msgNoteName').addClass('hide');
@@ -259,6 +296,19 @@
             $('#newNoteName').val('');
             $('#msgNewNoteName').addClass('hide');
             $('#inputNewNameGroup').removeClass('error');
+            MYTN.COMMON.clearClickOnEnter();
+        });
+        
+        $('#modalUserData').on('hidden', function () {
+            $('#inputUsrNameGroup').removeClass('error');
+            $('#msgUsrName').addClass('hide');
+            
+            $('#inputEmailGroup').removeClass('error');
+            $('#msgUsrEmail').addClass('hide');
+            
+            $('#inputConfPwdGroup').removeClass('error');
+            $('#msgUsrConfPwd').addClass('hide');
+            
             MYTN.COMMON.clearClickOnEnter();
         });
         
@@ -275,6 +325,16 @@
         
         $('#modalDeleteNote').on('shown', function () {
             $('#noteNameDelete').html('<b>' + $('#labelFileName').html() + '</b>');
+        });
+        
+        $('#modalUserData').on('shown', function () {
+            MYTN.USER.get( function (user) {
+                $('#usrName').focus();
+                $('#usrName').val(user.name);
+                $('#usrEmail').val(user.email);
+            });
+            
+            MYTN.COMMON.clickOnEnter('btnUpdateUserData');
         });
     });
 }());
