@@ -172,6 +172,25 @@
         $('#noteContent').height(panelContent.height() - paddingsAndElementsSizeOfPanel);
     };
     
+    var clearErrorsMsgOfUserDataForm = function () {
+        $('#inputUsrNameGroup').removeClass('error');
+        $('#msgUsrName').addClass('hide');
+        
+        $('#inputEmailGroup').removeClass('error');
+        $('#msgRequiredUsrEmail').addClass('hide');
+        $('#msgInvalidUsrEmail').addClass('hide');
+        
+        $('#inputPwdGroup').removeClass('error');
+        $('#msgUsrPwd').addClass('hide');
+        
+        $('#inputConfPwdGroup').removeClass('error');
+        $('#msgUsrConfPwd').addClass('hide');
+    };
+    
+    var validateEmail = function(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+    
     jQuery( function($) {
         $(document).ready( function () {
             adjustElementsHeightOfContainer();
@@ -248,8 +267,13 @@
             });
         });
         
+        $('#usrPwd').on('keyup keydown', function () {
+            this.value = $(this).val().replace(/\s+/g,'');
+        });
+        
         $('#btnUpdateUserData').click( function() {
             var error = 0;
+            clearErrorsMsgOfUserDataForm();
             
             if (!$('#usrName').val() || $.trim($('#usrName').val()) === '') {
                 $('#inputUsrNameGroup').addClass('error');
@@ -259,12 +283,21 @@
             
             if (!$('#usrEmail').val() || $.trim($('#usrEmail').val()) === '') {
                 $('#inputEmailGroup').addClass('error');
-                $('#msgUsrEmail').removeClass('hide');
+                $('#msgRequiredUsrEmail').removeClass('hide');
+                error++;
+            } else if (!validateEmail($('#usrEmail').val())) {
+                $('#inputEmailGroup').addClass('error');
+                $('#msgInvalidUsrEmail').removeClass('hide');
                 error++;
             }
             
             if ($('#usrPwd').val()) {
-                if ($.trim($('#usrPwd').val()) !== $.trim($('#usrConfPwd').val())) {
+                if ($('#usrPwd').val().replace(/\s+/g,'').length < 4) {
+                    $('#inputPwdGroup').addClass('error');
+                    $('#msgUsrPwd').removeClass('hide');
+                    error++;
+                }
+                else if ($.trim($('#usrPwd').val()) !== $.trim($('#usrConfPwd').val())) {
                     $('#inputConfPwdGroup').addClass('error');
                     $('#msgUsrConfPwd').removeClass('hide');
                     error++;
@@ -299,16 +332,8 @@
             MYTN.COMMON.clearClickOnEnter();
         });
         
-        $('#modalUserData').on('hidden', function () {
-            $('#inputUsrNameGroup').removeClass('error');
-            $('#msgUsrName').addClass('hide');
-            
-            $('#inputEmailGroup').removeClass('error');
-            $('#msgUsrEmail').addClass('hide');
-            
-            $('#inputConfPwdGroup').removeClass('error');
-            $('#msgUsrConfPwd').addClass('hide');
-            
+        $('#modalUserData').on('hidden', function () {            
+            clearErrorsMsgOfUserDataForm();
             MYTN.COMMON.clearClickOnEnter();
         });
         
@@ -333,6 +358,9 @@
                 $('#usrName').val(user.name);
                 $('#usrEmail').val(user.email);
             });
+            
+            $('#usrPwd').val('');
+            $('#usrConfPwd').val('');
             
             MYTN.COMMON.clickOnEnter('btnUpdateUserData');
         });

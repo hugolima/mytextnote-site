@@ -146,21 +146,23 @@
           <div id="inputUsrNameGroup" class="control-group">
             <label>Name *</label>
             <input id="usrName" type="text" class="span3" maxlength="30" style="width: 300px;">
-            <span id="msgUsrName" class="help-inline hide">ops..! name is required.</span>
+            <span id="msgUsrName" class="help-inline hide">Name is required.</span>
           </div>
           <div id="inputEmailGroup" class="control-group">
-            <label>E-mail *</label>
+            <label>Email *</label>
             <input id="usrEmail" type="text" class="span3" maxlength="60" style="width: 400px;">
-            <span id="msgUsrEmail" class="help-inline hide">ops..! e-mail is required.</span>
+            <span id="msgRequiredUsrEmail" class="help-inline hide">Email is required.</span>
+            <span id="msgInvalidUsrEmail" class="help-inline hide">It seems that the email is not correct.</span>
           </div>
           <div id="inputPwdGroup" class="control-group">
             <label>New Password</label>
-            <input id="usrPwd" type="text" class="span3" maxlength="10" style="width: 200px;">
+            <input id="usrPwd" type="password" class="span3" maxlength="8" style="width: 200px;">
+            <span id="msgUsrPwd" class="help-inline hide">Should have at least 4 digits.</span>
           </div>
           <div id="inputConfPwdGroup" class="control-group">
             <label>Confirm New Password</label>
-            <input id="usrConfPwd" type="text" class="span3" maxlength="10" style="width: 200px;">
-            <span id="msgUsrConfPwd" class="help-inline hide">ops..! it doesn't match with password.</span>
+            <input id="usrConfPwd" type="password" class="span3" maxlength="8" style="width: 200px;">
+            <span id="msgUsrConfPwd" class="help-inline hide">It doesn't match with new password.</span>
           </div>
       </div>
       <div class="modal-footer">
