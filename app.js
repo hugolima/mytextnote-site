@@ -14,7 +14,7 @@ var MyTextNote = (function () {
                 pass: config.redis.pass
             }),
             server = connect()
-                .use(connect.favicon())
+                .use(connect.favicon(__dirname + '/static/public/img/favicon.ico'))
                 .use(connect.logger({ buffer: true }))
                 .use(connect.cookieParser())
                 .use(connect.session({
