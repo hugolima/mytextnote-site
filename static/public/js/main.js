@@ -355,6 +355,7 @@
         $('#modalUserData').on('shown', function () {
             MYTN.USER.get( function (user) {
                 $('#usrName').focus();
+                $('#usrLogin').html(user.login);
                 $('#usrName').val(user.name);
                 $('#usrEmail').val(user.email);
             });

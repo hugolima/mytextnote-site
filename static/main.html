@@ -139,8 +139,9 @@
     
     <!-- Modal for user info -->
     <div class="modal hide" id="modalUserData">
-      <div class="modal-header">
-        <h3>Update User Data</h3>
+      <div class="modal-header" style="height: 30px;">
+        <h3 style="float: left;">Update User Data</h3>
+        <span style="float: right; padding-top: 5px;">Login: <b id="usrLogin"></b></span>
       </div>
       <div class="modal-body">
           <div id="inputUsrNameGroup" class="control-group">
@@ -150,18 +151,18 @@
           </div>
           <div id="inputEmailGroup" class="control-group">
             <label>Email *</label>
-            <input id="usrEmail" type="text" class="span3" maxlength="60" style="width: 400px;">
+            <input id="usrEmail" type="text" class="span3" maxlength="60" style="width: 350px;">
             <span id="msgRequiredUsrEmail" class="help-inline hide">Email is required.</span>
             <span id="msgInvalidUsrEmail" class="help-inline hide">It seems that the email is not correct.</span>
           </div>
           <div id="inputPwdGroup" class="control-group">
             <label>New Password</label>
-            <input id="usrPwd" type="password" class="span3" maxlength="8" style="width: 200px;">
+            <input id="usrPwd" type="password" class="span3" maxlength="8" style="width: 150px;">
             <span id="msgUsrPwd" class="help-inline hide">Should have at least 4 digits.</span>
           </div>
           <div id="inputConfPwdGroup" class="control-group">
             <label>Confirm New Password</label>
-            <input id="usrConfPwd" type="password" class="span3" maxlength="8" style="width: 200px;">
+            <input id="usrConfPwd" type="password" class="span3" maxlength="8" style="width: 150px;">
             <span id="msgUsrConfPwd" class="help-inline hide">It doesn't match with new password.</span>
           </div>
       </div>
