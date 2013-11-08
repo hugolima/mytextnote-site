@@ -67,9 +67,9 @@ window.MYTN = (function () {
     })();
     
     SERVER = (function () {
-        var sendAjax, dataType, timeout;
+        var dataType, timeout;
         
-        sendAjax = function (requestObj) {
+        var sendAjax = function (requestObj) {
             var request = $.ajax({
                 'type': requestObj.method,
                 'url': requestObj.url,
@@ -105,6 +105,14 @@ window.MYTN = (function () {
                 COMMON.showGenericMsg('<strong>Oops!</strong> Something goes wrong on your request, try again later.');
             });
         };
+        
+        $(document).ajaxSend(function(event, request, settings) {
+            $('.imgLoader').show();
+        });
+        
+        $(document).ajaxComplete(function(event, request, settings) {
+            $('.imgLoader').hide();
+        });
         
         return {
             'dataType': dataType,

@@ -56,13 +56,11 @@
         
         if (!noteSelected) {
             var that = this;
-            $('#loaderImgNavbar').show();
             
             MYTN.NOTES.get(this.id, function(note) {
                 noteLink = that.id;
                 updateNoteMarkers($(that), note.name, note.content);
                 checkLinkOperations();
-                $('#loaderImgNavbar').hide();
             });
         } else {
             noteLink = noteSelected.link;
@@ -335,7 +333,6 @@
         });
         
         $('#modalUserData').on('hidden', function () {
-            $('#loaderImgUsrData').hide();
             clearErrorsMsgOfUserDataForm();
             MYTN.COMMON.clearClickOnEnter();
         });
@@ -356,14 +353,11 @@
         });
         
         $('#modalUserData').on('shown', function () {
-            $('#loaderImgUsrData').show();
-            
             MYTN.USER.get( function (user) {
                 $('#usrName').focus();
                 $('#usrLogin').html(user.login);
                 $('#usrName').val(user.name);
                 $('#usrEmail').val(user.email);
-                $('#loaderImgUsrData').hide();
             });
             
             $('#usrPwd').val('');

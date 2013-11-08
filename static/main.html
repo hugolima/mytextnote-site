@@ -54,7 +54,7 @@
               <li class="active"><a data-toggle="modal" data-backdrop="static" href="#modalCreateNote">Create</a></li>
               <li id="liLnkRename" class="disabled requireNote"><a id="lnkRename" data-toggle="modal" data-backdrop="static" href="#modalRenameNote">Rename</a></li>
               <li id="liLnkDelete" class="disabled requireNote"><a id="lnkDelete" data-toggle="modal" data-backdrop="static" href="#modalDeleteNote">Delete</a></li>
-              <li><img id="loaderImgNavbar" class="imgLoader" src="/public/img/loader_nav.gif" style="display: none; padding: 10px 20px 11px;" /></li>
+              <li><img class="imgLoader" src="/public/img/loader_nav.gif" style="display: none; padding: 10px 20px 11px;" /></li>
             </ul>
             <p class="navbar-text pull-right"><a id="userName" data-toggle="modal" data-backdrop="static" href="#modalUserData" style="padding-right: 15px;">User name</a>|<a href="/user/logout" style="padding-left: 15px;">Logout</a></p>
           </div><!--/.nav-collapse -->
@@ -75,8 +75,8 @@
             <div class="input">
               <textarea id="noteContent" class="xxlarge" style="width: 100%; padding-right: 0px; padding-left: 0px; font-size: 15px; line-height: 22px; resize: none;"></textarea>
               <span class="help-block" style="margin-top: 0;">
-                <div id="noteSaved" style="color: #56B948;">Saved</div>
-                <div id="noteNotSaved" style="display: none; color: #B94A48;">Saving...</div>
+                <div id="noteSaved">Saved</div>
+                <div id="noteNotSaved" style="display: none;">Saving...</div>
               </span>
             </div>
           </div>
