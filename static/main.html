@@ -54,6 +54,7 @@
               <li class="active"><a data-toggle="modal" data-backdrop="static" href="#modalCreateNote">Create</a></li>
               <li id="liLnkRename" class="disabled requireNote"><a id="lnkRename" data-toggle="modal" data-backdrop="static" href="#modalRenameNote">Rename</a></li>
               <li id="liLnkDelete" class="disabled requireNote"><a id="lnkDelete" data-toggle="modal" data-backdrop="static" href="#modalDeleteNote">Delete</a></li>
+              <li><img id="loaderImgNavbar" class="imgLoader" src="/public/img/loader_nav.gif" style="display: none; padding: 10px 20px 11px;" /></li>
             </ul>
             <p class="navbar-text pull-right"><a id="userName" data-toggle="modal" data-backdrop="static" href="#modalUserData" style="padding-right: 15px;">User name</a>|<a href="/user/logout" style="padding-left: 15px;">Logout</a></p>
           </div><!--/.nav-collapse -->
@@ -142,7 +143,7 @@
       <div class="modal-header" style="height: 30px;">
         <h3 style="float: left;">Update User Data</h3>
         <span style="float: right; padding-top: 5px;">
-          <img id="loaderImgUsrData" src="/public/img/loader.gif" style="display: none; padding-right: 10px; vertical-align: middle;" />Login: <b id="usrLogin"></b>
+          <img id="loaderImgUsrData" class="imgLoader" src="/public/img/loader.gif" style="display: none; padding-right: 10px; vertical-align: middle;" />Login: <b id="usrLogin"></b>
         </span>
       </div>
       <div class="modal-body">

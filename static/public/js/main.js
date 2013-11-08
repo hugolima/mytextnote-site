@@ -56,11 +56,13 @@
         
         if (!noteSelected) {
             var that = this;
+            $('#loaderImgNavbar').show();
             
             MYTN.NOTES.get(this.id, function(note) {
                 noteLink = that.id;
                 updateNoteMarkers($(that), note.name, note.content);
                 checkLinkOperations();
+                $('#loaderImgNavbar').hide();
             });
         } else {
             noteLink = noteSelected.link;

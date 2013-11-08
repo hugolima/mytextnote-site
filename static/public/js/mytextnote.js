@@ -2,16 +2,15 @@ window.MYTN = (function () {
     var COMMON, SERVER, SESSION, WEBSOCKET, USER, NOTES;
     
     COMMON = (function () {
-        var restoreToDefaults, showGenericMsg, clickOnEnter, clearClickOnEnter, iterateLi, by, sortObjArray;
-        
-        restoreToDefaults = function () {
+        var restoreToDefaults = function () {
             $('.btn').button('reset');
             $('.modal').modal('hide');
+            $('.imgLoader').hide();
         };
         
-        showGenericMsg = function() {};
+        var showGenericMsg = function() {};
         
-        clickOnEnter = function (idBtn) {
+        var clickOnEnter = function (idBtn) {
             $(document).on('keypress', function (event) {
                 if (event.which === 13) {
                     event.preventDefault();
@@ -20,15 +19,15 @@ window.MYTN = (function () {
             });
         };
         
-        clearClickOnEnter = function () {
+        var clearClickOnEnter = function () {
             $(document).off('keypress');
         };
         
-        iterateLi = function (idUl, fn) {
+        var iterateLi = function (idUl, fn) {
             $('#' + idUl).find('li').each(fn);
         };
         
-        by = function (name) {
+        var by = function (name) {
             return function (o, p) {
                 var a, b;
                 if (typeof o === 'object' && typeof p === 'object' && o && p) {
@@ -53,7 +52,7 @@ window.MYTN = (function () {
             };
         };
         
-        sortObjArray = function (array, propertyName) {
+        var sortObjArray = function (array, propertyName) {
             array.sort( by(propertyName) );
         };
         
@@ -65,7 +64,6 @@ window.MYTN = (function () {
             'iterateLi': iterateLi,
             'sortObjArray': sortObjArray
         };
-        
     })();
     
     SERVER = (function () {
