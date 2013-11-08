@@ -332,7 +332,8 @@
             MYTN.COMMON.clearClickOnEnter();
         });
         
-        $('#modalUserData').on('hidden', function () {            
+        $('#modalUserData').on('hidden', function () {
+            $('loaderImgUsrData').hide();
             clearErrorsMsgOfUserDataForm();
             MYTN.COMMON.clearClickOnEnter();
         });
@@ -353,16 +354,18 @@
         });
         
         $('#modalUserData').on('shown', function () {
+            $('loaderImgUsrData').show();
+            
             MYTN.USER.get( function (user) {
                 $('#usrName').focus();
                 $('#usrLogin').html(user.login);
                 $('#usrName').val(user.name);
                 $('#usrEmail').val(user.email);
+                $('loaderImgUsrData').hide();
             });
             
             $('#usrPwd').val('');
             $('#usrConfPwd').val('');
-            
             MYTN.COMMON.clickOnEnter('btnUpdateUserData');
         });
     });
