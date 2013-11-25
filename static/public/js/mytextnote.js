@@ -102,7 +102,7 @@ window.MYTN = (function () {
             });
             request.fail( function (jqXHR, textStatus) {
                 COMMON.restoreToDefaults();
-                COMMON.showGenericMsg('<strong>Oops!</strong> Something goes wrong on your request, try again later.');
+                COMMON.showGenericMsg('<strong>Oops!</strong> Something went wrong on the system, try again later.');
             });
         };
         
