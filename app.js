@@ -27,7 +27,7 @@ var MyTextNote = (function () {
                 .use(require('./lib/middleware').sessionSecurity)
                 .use('/session', resource(require('./lib/controllers/session')))
                 .use('/user', resource(require('./lib/controllers/user')))
-                .use('/notes', resource(require('./lib/controllers/note')))
+                .use('/note', resource(require('./lib/controllers/note')))
                 .use(connect.static(config.staticDir))
                 .listen(config.web.port);
         

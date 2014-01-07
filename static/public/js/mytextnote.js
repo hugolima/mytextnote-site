@@ -272,7 +272,7 @@ window.MYTN = (function () {
         var get = function (id, callback) {
             SERVER.send({
                 method: 'GET',
-                url: '/notes/note/' + id,
+                url: '/note/id/' + id,
                 callback: function(err, data) {
                     callback( data.object );
                 }
@@ -292,7 +292,7 @@ window.MYTN = (function () {
         var list = function (callback) {
             SERVER.send({
                 method: 'GET',
-                url: '/notes',
+                url: '/note/list',
                 callback: function(err, data) {
                     callback( data.object );
                 }
@@ -302,7 +302,7 @@ window.MYTN = (function () {
         var add = function (name, callback) {
             SERVER.send({
                 method: 'POST',
-                url: '/notes/add',
+                url: '/note/add',
                 params: {'name': name},
                 callback: function(err, data) {
                     callback( data.object );
@@ -313,7 +313,7 @@ window.MYTN = (function () {
         var rename = function (id, newName, callback) {
             SERVER.send({
                 method: 'POST',
-                url: '/notes/note/' + id,
+                url: '/note/id/' + id,
                 params: {'newName': newName},
                 callback: function() {
                     callback();
@@ -324,7 +324,7 @@ window.MYTN = (function () {
         var remove = function (id, callback) {
             SERVER.send({
                 method: 'DELETE',
-                url: '/notes/note/' + id,
+                url: '/note/id/' + id,
                 callback: function() {
                     callback();
                 }
