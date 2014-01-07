@@ -102,7 +102,7 @@ window.MYTN = (function () {
             });
             request.fail( function (jqXHR, textStatus) {
                 COMMON.restoreToDefaults();
-                COMMON.showGenericMsg('<strong>Oops!</strong> Something went wrong on the system, try again later.');
+                COMMON.showGenericMsg('<strong>Oops!</strong> Something went wrong, try again later.');
             });
         };
         
@@ -269,10 +269,10 @@ window.MYTN = (function () {
     })();
     
     NOTES = (function () {
-        var get = function (link, callback) {
+        var get = function (id, callback) {
             SERVER.send({
                 method: 'GET',
-                url: link,
+                url: '/notes/note/' + id,
                 callback: function(err, data) {
                     callback( data.object );
                 }
@@ -310,10 +310,10 @@ window.MYTN = (function () {
             });
         };
         
-        var rename = function (noteLink, newName, callback) {
+        var rename = function (id, newName, callback) {
             SERVER.send({
                 method: 'POST',
-                url: noteLink,
+                url: '/notes/note/' + id,
                 params: {'newName': newName},
                 callback: function() {
                     callback();
@@ -321,19 +321,19 @@ window.MYTN = (function () {
             });
         };
         
-        var remove = function (noteLink, callback) {
+        var remove = function (id, callback) {
             SERVER.send({
                 method: 'DELETE',
-                url: noteLink,
+                url: '/notes/note/' + id,
                 callback: function() {
                     callback();
                 }
             });
         };
         
-        var updateContent = function (noteLink, newContent, callback) {
+        var updateContent = function (id, newContent, callback) {
             var data = {
-                'link': noteLink,
+                'id': id,
                 'content': newContent
             };
             

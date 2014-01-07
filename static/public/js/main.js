@@ -1,5 +1,5 @@
 (function () {
-    var noteLink, oldNoteContent, timerSavingContent, processingUpdates = 0;
+    var noteID, oldNoteContent, timerSavingContent, processingUpdates = 0;
     
     MYTN.COMMON.showGenericMsg = function (msg) {
         if ($('#generalErrorMsg').length) {
@@ -22,7 +22,7 @@
         $('#liLnkDelete').removeClass('disabled active');
         $('#liLnkRename').removeClass('disabled active');
         
-        if (noteLink) {
+        if (noteID) {
             $('#liLnkDelete').addClass('active');
             $('#liLnkRename').addClass('active');
             return;
@@ -58,13 +58,13 @@
             var that = this;
             
             MYTN.NOTES.get(this.id, function(note) {
-                noteLink = that.id;
+                noteID = that.id;
                 updateNoteMarkers($(that), note.name, note.content);
                 checkLinkOperations();
             });
         } else {
-            noteLink = noteSelected.link;
-            updateNoteMarkers($('li[id="' + noteSelected.link + '"]'), noteSelected.name, '');
+            noteID = noteSelected.id;
+            updateNoteMarkers($('li[id="' + noteSelected.id + '"]'), noteSelected.name, '');
             checkLinkOperations();
         }
     };
@@ -75,7 +75,7 @@
             MYTN.COMMON.sortObjArray(notes, 'name');
             
             $.each(notes, function(i, item) {
-                items.push('<li id="' + item.link + '"><a href="#">' + item.name + '</a></li>');
+                items.push('<li id="' + item.id + '"><a href="#">' + item.name + '</a></li>');
             });
             
             $('#notesList').children("div").empty();
@@ -110,7 +110,7 @@
     };
     
     var checkUpdateContent = function () {
-        if (!noteLink) {
+        if (!noteID) {
             stopUpdateContent();
             return;
         }
@@ -118,7 +118,7 @@
         var contentToSend = $('#noteContent').val();
         
         if (oldNoteContent !== contentToSend) {
-            MYTN.NOTES.updateContent(noteLink, contentToSend, updateSavedSign);
+            MYTN.NOTES.updateContent(noteID, contentToSend, updateSavedSign);
             oldNoteContent = contentToSend;
             processingUpdates += 1;
         }
@@ -206,7 +206,7 @@
         });
         
         $('.requireNote').click( function() {
-            if (!noteLink) {
+            if (!noteID) {
                 return false;
             }
             return true;
@@ -243,10 +243,10 @@
             var btnSave = $(this);
             btnSave.button('loading');
             
-            MYTN.NOTES.rename(noteLink, $('#newNoteName').val(), function() {
+            MYTN.NOTES.rename(noteID, $('#newNoteName').val(), function() {
                 btnSave.button('reset');
                 $('#labelFileName').html($('#newNoteName').val());
-                $('li[id="' + noteLink + '"]').children('a').html($('#newNoteName').val());
+                $('li[id="' + noteID + '"]').children('a').html($('#newNoteName').val());
                 $('#modalRenameNote').modal('hide');
             });
         });
@@ -255,9 +255,9 @@
             var btnDeleteNote = $(this);
             btnDeleteNote.button('loading');
             
-            MYTN.NOTES.remove(noteLink, function() {
+            MYTN.NOTES.remove(noteID, function() {
                 btnDeleteNote.button('reset');
-                noteLink = undefined;
+                noteID = undefined;
                 checkLinkOperations();
                 getNotes();
                 
