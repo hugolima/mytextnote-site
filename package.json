@@ -11,6 +11,7 @@
     "formidable": "1.0.9",
     "mongoose": "2.5.13",
     "resource-router": "0.3.2",
-    "socket.io": "0.9.6"
+    "socket.io": "0.9.6",
+    "hashids": "0.3.3"
   }
 }

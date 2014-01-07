@@ -16,6 +16,7 @@ var MyTextNote = (function () {
             server = connect()
                 .use(connect.favicon(__dirname + '/static/public/img/favicon.ico'))
                 .use(connect.logger({ buffer: true }))
+                .use('/note/p', resource(require('./lib/controllers/publicnote')))
                 .use(require('./lib/middleware').showPublicNotePage)
                 .use(connect.cookieParser())
                 .use(connect.session({
@@ -27,7 +28,6 @@ var MyTextNote = (function () {
                 .use('/session', resource(require('./lib/controllers/session')))
                 .use('/user', resource(require('./lib/controllers/user')))
                 .use('/notes', resource(require('./lib/controllers/note')))
-                .use('/:login/:noteid', resource(require('./lib/controllers/public_note')))
                 .use(connect.static(config.staticDir))
                 .listen(config.web.port);
         

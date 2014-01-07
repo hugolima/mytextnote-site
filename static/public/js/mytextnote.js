@@ -279,6 +279,16 @@ window.MYTN = (function () {
             });
         };
         
+        var getPublic = function (login, code, callback) {
+            SERVER.send({
+                method: 'GET',
+                url: '/note/p/' + login + '/' + code,
+                callback: function(err, data) {
+                    callback( data.object );
+                }
+            });
+        };
+        
         var list = function (callback) {
             SERVER.send({
                 method: 'GET',
@@ -332,6 +342,7 @@ window.MYTN = (function () {
         
         return {
             'get': get,
+            'getPublic': getPublic,
             'list': list,
             'add': add,
             'rename': rename,

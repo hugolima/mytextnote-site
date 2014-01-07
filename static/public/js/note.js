@@ -30,9 +30,19 @@
         $('#noteContent').height(panelContent.height() - paddingsAndElementsSizeOfPanel);
     };
     
+    var getNote = function () {
+        var pathArray = window.location.pathname.split('/');
+        
+        MYTN.NOTES.getPublic(pathArray[1], pathArray[2], function(note) {
+            $('#labelFileName').html(note.name);
+            $('#noteContent').val(note.content).focus();
+        });
+    };
+    
     jQuery( function($) {
         $(document).ready( function () {
             adjustElementsHeightOfContainer();
+            getNote();
         });
         
         $(window).on('resize', function () {
