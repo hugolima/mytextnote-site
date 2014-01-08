@@ -170,12 +170,7 @@ window.MYTN = (function () {
         };
         
         WebSocket.prototype.generateEventID = function () {
-            if (this.eventID < 100) {
-                this.eventID += 1;
-            } else {
-                this.eventID = 1;
-            }
-            
+            this.eventID = (this.eventID % 100) + 1;
             return this.eventID;
         };
         
@@ -207,7 +202,7 @@ window.MYTN = (function () {
         };
         
         return {
-            'notesSocket': new WebSocket('/notesSocket')
+            'note': new WebSocket('/note')
         }
     })();
     
@@ -337,7 +332,7 @@ window.MYTN = (function () {
                 'content': newContent
             };
             
-            WEBSOCKET['notesSocket'].emit('updateNoteContent', data, callback);
+            WEBSOCKET['note'].emit('updateContent', data, callback);
         };
         
         return {
