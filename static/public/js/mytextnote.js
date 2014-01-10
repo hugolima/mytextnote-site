@@ -142,18 +142,17 @@ window.MYTN = (function () {
     })();
     
     WEBSOCKET = (function () {
-        var executeCallback = function (callbacks, eventID, success) {
+        function executeCallback (callbacks, eventID, success) {
             if (callbacks[eventID]) {
                 callbacks[eventID]( success );
                 callbacks[eventID] = undefined;
             }
         };
         
-        var resetInactivity = function (timer, socket) {
-            var disconnect = function () {
-                if (socket.socket) {
-                    socket.socket.disconnect();
-                    socket.socket = undefined;
+        function resetInactivity (timer, socket) {
+            function disconnect () {
+                if (socket.connected) {
+                    socket.disconnect();
                 }
             };
             
@@ -161,12 +160,11 @@ window.MYTN = (function () {
             return window.setTimeout(disconnect, 300000);
         };
         
-        var WebSocket = function (url) {
+        function WebSocket (url) {
             this.url = url;
-            this.socket = {};
-            
             this.eventID = 0;
             this.callbacks = {};
+            this.websocket = {};
         };
         
         WebSocket.prototype.generateEventID = function () {
@@ -175,30 +173,40 @@ window.MYTN = (function () {
         };
         
         WebSocket.prototype.emit = function (event, data, callback) {
-            var callbacksRef = this.callbacks;
+            var self = this;
             
-            if (!this.socket.socket) {
-                this.socket = io.connect( this.url, {'force new connection': true} );
-                this.socket.on('connect', function () {
-                    
-                    this.on('error', function (data) {
+            function executeEmit() {
+                if (callback) {
+                    data['eventID'] = '' + self.generateEventID();
+                    self.callbacks[data.eventID] = callback;
+                }
+                
+                self.websocket.emit(event, data);
+                self.timerInactivity = resetInactivity( self.timerInactivity, self.websocket.socket );
+            }
+            
+            if (!this.websocket.socket) {
+                this.websocket = io.connect( this.url, {'reconnect': false} )
+                    .on('error', function (data) {
                         COMMON.showGenericMsg(data.msg);
-                        executeCallback(callbacksRef, data.eventID, false);
+                        executeCallback(self.callbacks, data.eventID, false);
+                    })
+                    .on('success', function (eventID) {
+                        executeCallback(self.callbacks, eventID, true);
+                    })
+                    .once('connect', function () {
+                        executeEmit();
                     });
-                    
-                    this.on('success', function (eventID) {
-                        executeCallback(callbacksRef, eventID, true);
-                    });
+            }
+            else if (!this.websocket.socket.connected) {
+                this.websocket.once('reconnect', function () {
+                    executeEmit();
                 });
+                this.websocket.socket.reconnect();
             }
-            
-            if (callback) {
-                data['eventID'] = '' + this.generateEventID();
-                this.callbacks[data.eventID] = callback;
+            else {
+                executeEmit();
             }
-            
-            this.socket.emit(event, data);
-            this.timerInactivity = resetInactivity( this.timerInactivity, this.socket );
         };
         
         return {
